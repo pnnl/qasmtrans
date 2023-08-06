@@ -362,7 +362,7 @@ namespace QASMTrans
         void RXX(ValType theta, IdxType qubit0, IdxType qubit1)
         {
             // RXX, w.s.p. to Qiksik: https://qiskit.org/documentation/stubs/qiskit.circuit.library.RXXGate.html
-            /**  CU   = [cos(theta/2)    0               0               -i*sin(theta/2)]
+            /**  RXX  = [cos(theta/2)    0               0               -i*sin(theta/2)]
                         [0               cos(theta/2)    -i*sin(theta/2) 0]
                         [0               -i*sin(theta/2) cos(theta/2)    0]
                         [-i*sin(theta/2) 0               0               cos(theta/2)]
@@ -373,7 +373,7 @@ namespace QASMTrans
         void RYY(ValType theta, IdxType qubit0, IdxType qubit1)
         {
             // RYY, w.s.p. to Qiksik: https://qiskit.org/documentation/stubs/qiskit.circuit.library.RYYGate.html#qiskit.circuit.library.RYYGate
-            /**  CU   = [cos(theta/2)    0               0               i*sin(theta/2)]
+            /**  RYY  = [cos(theta/2)    0               0               i*sin(theta/2)]
                         [0               cos(theta/2)    -i*sin(theta/2) 0]
                         [0               -i*sin(theta/2) cos(theta/2)    0]
                         [i*sin(theta/2) 0               0               cos(theta/2)]
@@ -384,7 +384,7 @@ namespace QASMTrans
         void RZZ(ValType theta, IdxType qubit0, IdxType qubit1)
         {
             // RZZ, w.s.p. to Qiksik: https://qiskit.org/documentation/stubs/qiskit.circuit.library.RZZGate.html#qiskit.circuit.library.RZZGate
-            /**  CU   = [e^(-i theta/2)    0               0               0]
+            /**  RZZ  = [e^(-i theta/2)    0               0               0]
              *          [0                 e^(i theta/2)  0               0]
              *          [0                 0               e^(i theta/2)  0]
              *          [0                 0               0               e^(-i theta/2)]

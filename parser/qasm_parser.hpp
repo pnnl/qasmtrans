@@ -585,6 +585,8 @@ void qasm_parser::generate_circuit(shared_ptr<Circuit> circuit, qasm_gate gate)
         circuit->CSWAP(qubits[0], qubits[1], qubits[2]);
     else if (gate_name == "ID")
         circuit->ID(qubits[0]);
+    else if (gate_name == "U0")
+        circuit->ID(qubits[0]);
     else if (gate_name == "RXX")
         circuit->RXX(params[0], qubits[0], qubits[1]);
     else if (gate_name == "RYY")

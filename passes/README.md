@@ -2,8 +2,8 @@
 
 Welcome to the QASMTrans Passes repository. This repository currently includes the following passes:
 
-- `transpiler.hpp`: The central transpiler function that invokes all the passes.
-- `routing_mapping.hpp`: Implements the Sabre routing and mapping method.
+- `transpiler.hpp`: Main function calls to the passes.
+- `routing_mapping.hpp`: Routing and mapping pass.
 - `decompose.hpp`: Decomposes the circuit into the basis gates supported by IBM.
 - `remapping.hpp`: Remaps the qubits based on user-specified priority settings.
 
