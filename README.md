@@ -4,7 +4,7 @@ circuits compiled for a particular NISQ device (e.g., from IBMQ, Rigetti, IonQ, 
 the contraints of basis gates and qubit topology. QASMTrans is purely developed in C++ without external
 library dependency, facilitate deployment across platforms. It is specially designed for emerging deep
 circuits, such as those from HHL, QPE, quantum simulation, etc. QASMTrans is easy to extend for adding 
-new optimization passes and backend devices (see [extension](qasmtrans_passes/README.md)). 
+new optimization passes and backend devices (see [extension](passes/README.md)). 
 
 
 ## Installation
@@ -22,7 +22,7 @@ make
 To run the transpiler, use the command below:
 
 ```bash
-./qasmtrans -i ../data/test_benchmark/bv10.qasm -m ibmq -b ibmq_toronto -v 1
+./qasmtrans -i ../data/test_benchmark/bv10.qasm -m ibmq -c ../data/devices/ibmq_toronto -v 1
 ```
 
 ## Options
@@ -94,9 +94,9 @@ QASMTrans includes two external source header files:
 - [json.hpp](https://github.com/nlohmann/json): a C++ json operation library.
 
 ## Developers:
-Fei Hua, Pacific Northwest National Laboratory (Main)
-Meng Wang, Pacific Northwest National Laboratory
-Ang Li, Pacific Northwest National Laboratory
+- Fei Hua, Pacific Northwest National Laboratory (Main developer)
+- Meng Wang, Pacific Northwest National Laboratory
+- Ang Li, Pacific Northwest National Laboratory
 
 Thanks to Gushu Li (University of Pennsylvania) for sharing the Python source code of Sabre[2]).
 
