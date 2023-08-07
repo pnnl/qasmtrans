@@ -8,6 +8,7 @@
 
 #include "json.hpp"
 #include "graph.hpp"
+#include <limits.h>
 
 using json = nlohmann::json;
 
