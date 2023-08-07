@@ -155,7 +155,7 @@ namespace QASMTrans
             /** RI = [e^(ia) 0] = [cos(a)+i*sin(a) 0]
                      [0 e^(ia)]   [0 cos(a)+i*sin(a)]
             */
-            Gate G(OP::RI, qubit, -1, 1, theta);
+            Gate G(OP::RI, qubit, -1, -1,1, theta);
             gates->push_back(G);
         }
         void RX(ValType theta, IdxType qubit)
@@ -164,7 +164,7 @@ namespace QASMTrans
             /** RX = [cos(a/2) -i*sin(a/2)]
                      [-i*sin(a/2) cos(a/2)]
             */
-            Gate G(OP::RX, qubit, -1, 1, theta);
+            Gate G(OP::RX, qubit, -1,-1, 1, theta);
             gates->push_back(G);
         }
         void RY(ValType theta, IdxType qubit)
@@ -173,7 +173,7 @@ namespace QASMTrans
             /** RY = [cos(a/2) -sin(a/2)]
                      [sin(a/2)  cos(a/2)]
             */
-            Gate G(OP::RY, qubit, -1, 1, theta);
+            Gate G(OP::RY, qubit, -1, -1,1, theta);
             gates->push_back(G);
         }
         void RZ(ValType theta, IdxType qubit)
@@ -182,7 +182,7 @@ namespace QASMTrans
             /** RZ = [cos(a/2)-i*sin(a/2)  0]
                      [0  cos(a/2)+i*sin(a/2)]
             */
-            Gate G(OP::RZ, qubit, -1, 1, theta);
+            Gate G(OP::RZ, qubit, -1, -1,1, theta);
             gates->push_back(G);
         }
 
@@ -192,7 +192,7 @@ namespace QASMTrans
             /** P = [1, 0     ]  = [1,0]
                     [0, e^(ia)]    [0,cos(a)+i*sin(a)]
             */
-            Gate G(OP::P, qubit, -1, 1, theta);
+            Gate G(OP::P, qubit, -1, -1,1, theta);
             gates->push_back(G);
         }
         void U(ValType theta, ValType phi, ValType lam, IdxType qubit)
@@ -201,7 +201,7 @@ namespace QASMTrans
             /** U = [cos(theta/2), -e^(i*lam)sin(theta/2)]
                     [e^(i*phi)sin(theta/2), e^(i*(phi+lam))cos(theta/2)]
             */
-            Gate G(OP::U, qubit, -1, 1, theta, phi, lam);
+            Gate G(OP::U, qubit, -1, -1,1, theta, phi, lam);
             gates->push_back(G);
         }
         void CX(IdxType ctrl, IdxType qubit)
@@ -212,7 +212,7 @@ namespace QASMTrans
                         [0 0 0 1]
                         [0 0 1 0]
             */
-            Gate G(OP::CX, qubit, ctrl, 2);
+            Gate G(OP::CX, qubit, ctrl,-1, 2);
             gates->push_back(G);
         }
         void CY(IdxType ctrl, IdxType qubit)
@@ -223,7 +223,7 @@ namespace QASMTrans
                         [0 0 0 -i]
                         [0 0 i 0]
             */
-            Gate G(OP::CY, qubit, ctrl, 2);
+            Gate G(OP::CY, qubit, ctrl,-1, 2);
             gates->push_back(G);
         }
         void CZ(IdxType ctrl, IdxType qubit)
@@ -234,7 +234,7 @@ namespace QASMTrans
                         [0 0 1 0]
                         [0 0 0 -1]
             */
-            Gate G(OP::CZ, qubit, ctrl, 2);
+            Gate G(OP::CZ, qubit, ctrl,-1, 2);
             gates->push_back(G);
         }
         void CH(IdxType ctrl, IdxType qubit)
@@ -245,7 +245,7 @@ namespace QASMTrans
                         [0 0 s2i s2i]
                         [0 0 s2i -s2i]
             */
-            Gate G(OP::CH, qubit, ctrl, 2);
+            Gate G(OP::CH, qubit, ctrl,-1, 2);
             gates->push_back(G);
         }
         void CS(IdxType ctrl, IdxType qubit)
@@ -256,7 +256,7 @@ namespace QASMTrans
                         [0 0 1 0]
                         [0 0 0 i]
             */
-            Gate G(OP::CS, qubit, ctrl, 2);
+            Gate G(OP::CS, qubit, ctrl, -1,2);
         }
         void CSDG(IdxType ctrl, IdxType qubit)
         {
@@ -266,7 +266,7 @@ namespace QASMTrans
                         [0 0 1 0]
                         [0 0 0 -i]
             */
-            Gate G(OP::CSDG, qubit, ctrl, 2);
+            Gate G(OP::CSDG, qubit, ctrl, -1,2);
             gates->push_back(G);
         }
         void CT(IdxType ctrl, IdxType qubit)
@@ -277,7 +277,7 @@ namespace QASMTrans
                         [0 0 1 0]
                         [0 0 0 s2i+si2*i]
             */
-            Gate G(OP::CT, qubit, ctrl, 2);
+            Gate G(OP::CT, qubit, ctrl, -1,2);
             gates->push_back(G);
         }
         void CTDG(IdxType ctrl, IdxType qubit)
@@ -288,7 +288,7 @@ namespace QASMTrans
                         [0 0 1 0]
                         [0 0 0 s2i-si2*i]
             */
-            Gate G(OP::CTDG, qubit, ctrl, 2);
+            Gate G(OP::CTDG, qubit, ctrl,-1, 2);
             gates->push_back(G);
         }
         void CRX(ValType theta, IdxType ctrl, IdxType qubit)
@@ -299,7 +299,7 @@ namespace QASMTrans
                         [0 0 cos(a/2) -i*sin(a/2)]
                         [0 0 -i*sin(a/2) cos(a/2)]
             */
-            Gate G(OP::CRX, qubit, ctrl, 2, theta);
+            Gate G(OP::CRX, qubit, ctrl, -1,2, theta);
             gates->push_back(G);
         }
         void CRY(ValType theta, IdxType ctrl, IdxType qubit)
@@ -310,7 +310,7 @@ namespace QASMTrans
                         [0 0 cos(a/2) -sin(a/2)]
                         [0 0 sin(a/2)  cos(a/2)]
             */
-            Gate G(OP::CRY, qubit, ctrl, 2, theta);
+            Gate G(OP::CRY, qubit, ctrl, -1,2, theta);
             gates->push_back(G);
         }
         void CRZ(ValType theta, IdxType ctrl, IdxType qubit)
@@ -321,7 +321,7 @@ namespace QASMTrans
                         [0 0 cos(a/2)-i*sin(a/2)  0]
                         [0 0 0  cos(a/2)+i*sin(a/2)]
             */
-            Gate G(OP::CRZ, qubit, ctrl, 2, theta);
+            Gate G(OP::CRZ, qubit, ctrl, -1,2, theta);
             gates->push_back(G);
         }
         void CSX(IdxType ctrl, IdxType qubit)
@@ -332,7 +332,7 @@ namespace QASMTrans
                         [0 0 (1+i)/2 (1-i)/2]
                         [0 0 (1-i)/2 (1+i)/2]
             */
-            Gate G(OP::CSX, qubit, ctrl, 2);
+            Gate G(OP::CSX, qubit, ctrl,-1, 2);
             gates->push_back(G);
         }
         void CP(ValType theta, IdxType ctrl, IdxType qubit)
@@ -343,7 +343,7 @@ namespace QASMTrans
                         [0 0 1 0]
                         [0 0 0 cos(a)+i*sin(a)]
             */
-            Gate G(OP::CP, qubit, ctrl, 2, theta);
+            Gate G(OP::CP, qubit, ctrl,-1, 2, theta);
             gates->push_back(G);
         }
         void CU(ValType theta, ValType phi, ValType lam, ValType gamma,
@@ -356,7 +356,7 @@ namespace QASMTrans
                         [0 0 e^(i*(gamma+phi))sin(theta/2), e^(i*(gamma+phi+lam))cos(theta/2)]
             */
             
-            Gate G(OP::CU, qubit, ctrl, 2, theta, phi, lam, gamma);
+            Gate G(OP::CU, qubit, ctrl, -1,2, theta, phi, lam, gamma);
             gates->push_back(G);
         }
         void RXX(ValType theta, IdxType qubit0, IdxType qubit1)
@@ -367,7 +367,7 @@ namespace QASMTrans
                         [0               -i*sin(theta/2) cos(theta/2)    0]
                         [-i*sin(theta/2) 0               0               cos(theta/2)]
             */
-            Gate G(OP::RXX, qubit0, qubit1, 2, theta);
+            Gate G(OP::RXX, qubit0, qubit1, -1,2, theta);
             gates->push_back(G);
         }
         void RYY(ValType theta, IdxType qubit0, IdxType qubit1)
@@ -378,7 +378,7 @@ namespace QASMTrans
                         [0               -i*sin(theta/2) cos(theta/2)    0]
                         [i*sin(theta/2) 0               0               cos(theta/2)]
             */
-            Gate G(OP::RYY, qubit0, qubit1, 2, theta);
+            Gate G(OP::RYY, qubit0, qubit1, -1,2, theta);
             gates->push_back(G);
         }
         void RZZ(ValType theta, IdxType qubit0, IdxType qubit1)
@@ -389,7 +389,7 @@ namespace QASMTrans
              *          [0                 0               e^(i theta/2)  0]
              *          [0                 0               0               e^(-i theta/2)]
              */
-            Gate G(OP::RZZ, qubit0, qubit1, 2, theta);
+            Gate G(OP::RZZ, qubit0, qubit1, -1, 2, theta);
             gates->push_back(G);
         }
         void SX(IdxType qubit)
@@ -418,7 +418,7 @@ namespace QASMTrans
                         [0 1 0 0]
                         [0 0 0 1]
             */
-            Gate G(OP::SWAP, qubit, ctrl, 2);
+            Gate G(OP::SWAP, qubit, ctrl, -1,2);
             gates->push_back(G);
         }
         void M(IdxType qubit) // default is pauli-Z
@@ -428,7 +428,7 @@ namespace QASMTrans
         }
         void MA(IdxType repetition) // default is pauli-Z
         {
-            Gate G(OP::MA, -1, -1, 1, 0, 0, 0, repetition);
+            Gate G(OP::MA, -1, -1, -1,1, 0, 0, 0, repetition);
             gates->push_back(G);
         }
         void RESET(IdxType qubit)
@@ -451,27 +451,19 @@ namespace QASMTrans
         }
         void CCX(IdxType qubit0, IdxType qubit1, IdxType qubit2)
         {
-            H(qubit2);
-            CX(qubit1, qubit2);
-            TDG(qubit2);
-            CX(qubit0, qubit2);
-            T(qubit2);
-            CX(qubit1, qubit2);
-            T(qubit1);
-            TDG(qubit2);
-            CX(qubit0, qubit2);
-            T(qubit2);
-            CX(qubit0, qubit1);
-            T(qubit0);
-            TDG(qubit1);
-            H(qubit2);
-            CX(qubit0, qubit1);
+            Gate G(OP::CCX, qubit0, qubit1, qubit2, 3);
+            gates->push_back(G);
         }
-        void CSWAP(IdxType qubit0, IdxType qubit1, IdxType qubit2)
-        {
-            CX(qubit2, qubit1);
-            CCX(qubit0, qubit1, qubit2);
-            CX(qubit2, qubit1);
+       
+        void CSWAP(IdxType qubit0, IdxType qubit1, IdxType qubit2){
+            // CSWAP(qubit0, qubit1, qubit2, 0);
+            Gate G(OP::CSWAP, qubit0, qubit1, qubit2, 3);
+            gates->push_back(G);
+        }
+        void RCCX(IdxType qubit0, IdxType qubit1, IdxType qubit2){
+            // CSWAP(qubit0, qubit1, qubit2, 0);
+            Gate G(OP::RCCX, qubit0, qubit1, qubit2, 3);
+            gates->push_back(G);
         }
     };
 } 

@@ -593,6 +593,8 @@ void qasm_parser::generate_circuit(shared_ptr<Circuit> circuit, qasm_gate gate)
         circuit->RYY(params[0], qubits[0], qubits[1]);
     else if (gate_name == "RZZ")
         circuit->RZZ(params[0], qubits[0], qubits[1]);
+    else if (gate_name == "RCCX")
+        circuit->RCCX(qubits[0], qubits[1], qubits[2]);
     else
         throw logic_error("Undefined gate is called!");
 }

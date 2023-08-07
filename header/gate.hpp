@@ -233,7 +233,12 @@ namespace QASMTrans
          * C4 Gate
          ***********/
         C4,
-        ZZ
+        ZZ,
+        CSWAP,
+        CCX,
+        RCCX,
+        C3X,
+        C3SQRTX,
     };
 
     // Name of the gate for tracing purpose
@@ -282,7 +287,12 @@ namespace QASMTrans
         "C1",
         "C2",
         "C4",
-        "ZZ"};
+        "ZZ",
+        "CSWAP",
+        "CCX",
+        "RCCX",
+        "C3X",
+        "C3SQRTX"};
     /***********************************************
      * Gate Definition
      ***********************************************/
@@ -293,6 +303,7 @@ namespace QASMTrans
         enum OP op_name;
         IdxType qubit;
         IdxType ctrl;
+        IdxType extra;
         IdxType n_qubits;
         ValType theta;
         ValType phi;
@@ -303,6 +314,7 @@ namespace QASMTrans
         Gate(enum OP _op_name,
              IdxType _qubit,
              IdxType _ctrl = -1,
+             IdxType _extra = -1,
              IdxType _n_qubits = 1,
              ValType _theta = 0,
              ValType _phi = 0,
@@ -310,6 +322,7 @@ namespace QASMTrans
              IdxType _repetition = 0) : op_name(_op_name),
                                         qubit(_qubit),
                                         ctrl(_ctrl),
+                                        extra(_extra),
                                         n_qubits(_n_qubits),
                                         theta(_theta),
                                         phi(_phi),
@@ -318,6 +331,7 @@ namespace QASMTrans
         Gate(const Gate &g) : op_name(g.op_name),
                               qubit(g.qubit),
                               ctrl(g.ctrl),
+                              extra(g.extra),
                               n_qubits(g.n_qubits),
                               theta(g.theta),
                               phi(g.phi),

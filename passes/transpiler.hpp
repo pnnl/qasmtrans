@@ -35,7 +35,7 @@ void transpiler (shared_ptr<Circuit> circuit, shared_ptr<Chip> chip, map<string,
     double initial_decompose_time = initial_decompose_timer.measure();
     if (debug_level > 0) 
         cout << "STEP-1. Initial gate decomposition time: "<< (IdxType)initial_decompose_time <<"ms"<<endl;
-
+    
     //======================================== STEP-2: Routing and Mapping ============================================
     cpu_timer routing_timer;
     routing_timer.start_timer();
@@ -44,7 +44,8 @@ void transpiler (shared_ptr<Circuit> circuit, shared_ptr<Chip> chip, map<string,
     double routing_time = routing_timer.measure();
     if (debug_level > 0) 
         cout << "STEP-2. Routing and mapping time: " << (IdxType)routing_time << "ms"<< endl;
-    
+    if (debug_level > 1)
+        cout<< circuit->to_string()<<endl;
     //======================================== STEP-3: Basis Gate Decomposition =======================================
     cpu_timer decompose_timer;
     decompose_timer.start_timer();

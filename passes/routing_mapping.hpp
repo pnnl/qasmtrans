@@ -462,6 +462,7 @@ void Routing(shared_ptr<Circuit> circuit, shared_ptr<Chip> chip, IdxType debug_l
 {
     IdxType n_qubits = IdxType(circuit->num_qubits());
     vector<Gate> gate_info = circuit->get_gates();
+ 
     vector<Gate> cx_gates;
     for (IdxType i = 0; i < gate_info.size(); i++)
     {
@@ -525,11 +526,12 @@ void Routing(shared_ptr<Circuit> circuit, shared_ptr<Chip> chip, IdxType debug_l
     vector<pair<IdxType, IdxType>> decompose_gate_qubit;
     //^ now we have all the mapping and routing, we can do the gate decompose
     circuit->set_mapping(initial_mapping);
-    Gate MA_gate = gate_info[gate_info.size() - 1];
-    return_circuit.push_back(MA_gate);
+    // Gate MA_gate = gate_info[gate_info.size() - 1];
+    // return_circuit.push_back(MA_gate);
     gate_info = gate_info_after_transpiler;
     IdxType n_gates = IdxType(gate_info_after_transpiler.size());
     gate_info = return_circuit;
+
     circuit->set_gates(return_circuit);
     n_gates = IdxType(return_circuit.size());
 }
