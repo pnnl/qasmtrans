@@ -678,21 +678,21 @@ void Decompose(shared_ptr<Circuit> circuit, IdxType mode)
             else if (strcmp(OP_NAMES[g.op_name], "SX") == 0)
             {
                 // cout<<"gate name is"<<OP_NAMES[g.op_name]<<"angle is"<<g.theta<<endl;
-                decomposedGates_IonQ.push_back(Gate(OP::RX, g.qubit, -1, 1, PI/2));
+                decomposedGates_IonQ.push_back(Gate(OP::RX, g.qubit, -1,-1, 1, PI/2));
             }
             else if (strcmp(OP_NAMES[g.op_name], "X") == 0)
             {
                 // cout<<"gate name is"<<OP_NAMES[g.op_name]<<"angle is"<<g.theta<<endl;
-                decomposedGates_IonQ.push_back(Gate(OP::RX, g.qubit, -1, 1, PI));
+                decomposedGates_IonQ.push_back(Gate(OP::RX, g.qubit, -1,-1, 1, PI));
             }
             else if (strcmp(OP_NAMES[g.op_name], "CX") == 0)
             {
                 // cout<<"gate name is"<<OP_NAMES[g.op_name]<<"angle is"<<g.theta<<endl;
-                decomposedGates_IonQ.push_back(Gate(OP::RY, g.qubit, -1, 1, PI/2));
-                decomposedGates_IonQ.push_back(Gate(OP::RXX, g.qubit, g.ctrl, 2, PI/2));
-                decomposedGates_IonQ.push_back(Gate(OP::RX, g.qubit, -1, 1, -PI/2));
-                decomposedGates_IonQ.push_back(Gate(OP::RX, g.ctrl, -1, 1, -PI/2));
-                decomposedGates_IonQ.push_back(Gate(OP::RY, g.qubit, -1, 1, -PI/2));
+                decomposedGates_IonQ.push_back(Gate(OP::RY, g.qubit, -1,-1, 1, PI/2));
+                decomposedGates_IonQ.push_back(Gate(OP::RXX, g.qubit, g.ctrl,-1, 2, PI/2));
+                decomposedGates_IonQ.push_back(Gate(OP::RX, g.qubit, -1,-1, 1, -PI/2));
+                decomposedGates_IonQ.push_back(Gate(OP::RX, g.ctrl, -1,-1, 1, -PI/2));
+                decomposedGates_IonQ.push_back(Gate(OP::RY, g.qubit, -1,-1, 1, -PI/2));
             }
         }
         circuit->set_gates(decomposedGates_IonQ);
@@ -711,21 +711,21 @@ void Decompose(shared_ptr<Circuit> circuit, IdxType mode)
             else if (strcmp(OP_NAMES[g.op_name], "SX") == 0)
             {
                 // cout<<"gate name is"<<OP_NAMES[g.op_name]<<"angle is"<<g.theta<<endl;
-                decomposedGates_IonQ.push_back(Gate(OP::U, g.qubit, -1, 1, PI/2));
+                decomposedGates_IonQ.push_back(Gate(OP::U, g.qubit, -1, -1,1, PI/2));
             }
             else if (strcmp(OP_NAMES[g.op_name], "X") == 0)
             {
                 // cout<<"gate name is"<<OP_NAMES[g.op_name]<<"angle is"<<g.theta<<endl;
-                decomposedGates_IonQ.push_back(Gate(OP::U, g.qubit, -1, 1, PI));
+                decomposedGates_IonQ.push_back(Gate(OP::U, g.qubit, -1,-1, 1, PI));
             }
             else if (strcmp(OP_NAMES[g.op_name], "CX") == 0)
             {
                 // cout<<"gate name is"<<OP_NAMES[g.op_name]<<"angle is"<<g.theta<<endl;
-                decomposedGates_IonQ.push_back(Gate(OP::U, g.qubit, -1, 1, -PI/2,PI/2));
+                decomposedGates_IonQ.push_back(Gate(OP::U, g.qubit, -1, -1,1, -PI/2,PI/2));
                 decomposedGates_IonQ.push_back(Gate(OP::ZZ, g.qubit, g.ctrl, 2, PI/2));
-                decomposedGates_IonQ.push_back(Gate(OP::RZ, g.ctrl, -1, 1, -PI/2));
-                decomposedGates_IonQ.push_back(Gate(OP::U, g.qubit, -1, 1, PI/2,PI));
-                decomposedGates_IonQ.push_back(Gate(OP::RZ, g.ctrl, -1, 1, -PI/2));
+                decomposedGates_IonQ.push_back(Gate(OP::RZ, g.ctrl, -1,-1, 1, -PI/2));
+                decomposedGates_IonQ.push_back(Gate(OP::U, g.qubit, -1, -1,1, PI/2,PI));
+                decomposedGates_IonQ.push_back(Gate(OP::RZ, g.ctrl, -1, -1,1, -PI/2));
                 
             }
         
@@ -746,23 +746,23 @@ void Decompose(shared_ptr<Circuit> circuit, IdxType mode)
             else if (strcmp(OP_NAMES[g.op_name], "SX") == 0)
             {
                 // cout<<"gate name is"<<OP_NAMES[g.op_name]<<"angle is"<<g.theta<<endl;
-                decomposedGates_IonQ.push_back(Gate(OP::RX, g.qubit, -1, 1, PI/2));
+                decomposedGates_IonQ.push_back(Gate(OP::RX, g.qubit, -1, -1,1, PI/2));
             }
             else if (strcmp(OP_NAMES[g.op_name], "X") == 0)
             {
                 // cout<<"gate name is"<<OP_NAMES[g.op_name]<<"angle is"<<g.theta<<endl;
-                decomposedGates_IonQ.push_back(Gate(OP::RX, g.qubit, -1, 1, PI));
+                decomposedGates_IonQ.push_back(Gate(OP::RX, g.qubit, -1, -1,1, PI));
             }
             else if (strcmp(OP_NAMES[g.op_name], "CX") == 0)
             {
                 // cout<<"gate name is"<<OP_NAMES[g.op_name]<<"angle is"<<g.theta<<endl;
-                decomposedGates_IonQ.push_back(Gate(OP::RZ, g.qubit, -1, 1, -PI/2));
-                decomposedGates_IonQ.push_back(Gate(OP::RX, g.qubit, -1, 1, -PI/2));
-                decomposedGates_IonQ.push_back(Gate(OP::RZ, g.qubit, -1, 1, -PI/2));
+                decomposedGates_IonQ.push_back(Gate(OP::RZ, g.qubit, -1, -1,1, -PI/2));
+                decomposedGates_IonQ.push_back(Gate(OP::RX, g.qubit, -1,-1, 1, -PI/2));
+                decomposedGates_IonQ.push_back(Gate(OP::RZ, g.qubit, -1,-1, 1, -PI/2));
                 decomposedGates_IonQ.push_back(Gate(OP::CZ, g.qubit, g.ctrl, 2));
-                decomposedGates_IonQ.push_back(Gate(OP::RZ, g.qubit, -1, 1, -PI/2));
-                decomposedGates_IonQ.push_back(Gate(OP::RX, g.qubit, -1, 1, -PI/2));
-                decomposedGates_IonQ.push_back(Gate(OP::RZ, g.qubit, -1, 1, -PI/2));
+                decomposedGates_IonQ.push_back(Gate(OP::RZ, g.qubit, -1,-1, 1, -PI/2));
+                decomposedGates_IonQ.push_back(Gate(OP::RX, g.qubit, -1,-1, 1, -PI/2));
+                decomposedGates_IonQ.push_back(Gate(OP::RZ, g.qubit, -1, -1,1, -PI/2));
             }
         }
         circuit->set_gates(decomposedGates_IonQ);

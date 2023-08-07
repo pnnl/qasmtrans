@@ -4,20 +4,22 @@ Input circuit: ../data/test_benchmark/bwt_n21.qasm (21 qubits)
 Basis gate mode: ibmq
 Backend (topology): ../data/devices/ibmq_toronto.json (27 physical qubits)
 Limit mode: True
-STEP-1. Initial gate decomposition time: 225ms
-STEP-2. Routing and mapping time: 31047ms
-STEP-3. Basis gate decomposition time: 855ms
-Basis gates in transpiled circuit: cx:585173, reset:9207, rz:245600, sx:112000, x:153601, 
+STEP-1. Initial gate decomposition time: 261ms
+STEP-2. Routing and mapping time: 32203ms
+STEP-3. Basis gate decomposition time: 903ms
+ total QASMTrans time: 33369ms
+Basis gates in transpiled circuit: cx:583904, reset:9207, rz:245600, sx:112000, x:153601, 
 Saving to: output.qasm
 ======== QASMTrans ========
 Input circuit: ../data/test_benchmark/vqe_uccsd_n8.qasm (8 qubits)
 Basis gate mode: ibmq
 Backend (topology): ../data/devices/ibmq_toronto.json (27 physical qubits)
 Limit mode: True
-STEP-1. Initial gate decomposition time: 3ms
-STEP-2. Routing and mapping time: 154ms
-STEP-3. Basis gate decomposition time: 18ms
-Basis gates in transpiled circuit: cx:6172, rz:5320, sx:14112, x:4704, 
+STEP-1. Initial gate decomposition time: 4ms
+STEP-2. Routing and mapping time: 195ms
+STEP-3. Basis gate decomposition time: 20ms
+ total QASMTrans time: 220ms
+Basis gates in transpiled circuit: cx:7825, rz:5320, sx:14112, x:4704, 
 Saving to: output.qasm
 ======== QASMTrans ========
 Input circuit: ../data/test_benchmark/qaoa_n6.qasm (6 qubits)
@@ -27,7 +29,8 @@ Limit mode: True
 STEP-1. Initial gate decomposition time: 0ms
 STEP-2. Routing and mapping time: 4ms
 STEP-3. Basis gate decomposition time: 0ms
-Basis gates in transpiled circuit: cx:93, rz:456, sx:492, x:276, 
+ total QASMTrans time: 5ms
+Basis gates in transpiled circuit: cx:84, rz:456, sx:492, x:276, 
 Saving to: output.qasm
 ======== QASMTrans ========
 Input circuit: ../data/test_benchmark/gcm_h6.qasm (13 qubits)
@@ -35,87 +38,17 @@ Basis gate mode: ibmq
 Backend (topology): ../data/devices/ibmq_toronto.json (27 physical qubits)
 Limit mode: True
 STEP-1. Initial gate decomposition time: 1ms
-STEP-2. Routing and mapping time: 61ms
+STEP-2. Routing and mapping time: 64ms
 STEP-3. Basis gate decomposition time: 1ms
-Basis gates in transpiled circuit: cx:1407, rz:1522, sx:858, x:6, 
+ total QASMTrans time: 67ms
+Basis gates in transpiled circuit: cx:1428, rz:1522, sx:858, x:6, 
 Saving to: output.qasm
 ======== QASMTrans ========
 Input circuit: ../data/test_benchmark/vqe_n24.qasm (24 qubits)
 Basis gate mode: ibmq
 Backend (topology): ../data/devices/ibmq_toronto.json (27 physical qubits)
 Limit mode: True
-STEP-1. Initial gate decomposition time: 1080ms
-STEP-2. Routing and mapping time: 115739ms
-STEP-3. Basis gate decomposition time: 5887ms
-Basis gates in transpiled circuit: cx:3175607, rz:1450104, sx:2046816, x:2046816, 
-Saving to: output.qasm
-======== QASMTrans ========
-Input circuit: ../data/test_benchmark/qec_sm_n5.qasm (5 qubits)
-Basis gate mode: ibmq
-Backend (topology): ../data/devices/ibmq_toronto.json (27 physical qubits)
-Limit mode: True
-STEP-1. Initial gate decomposition time: 0ms
-STEP-2. Routing and mapping time: 0ms
-STEP-3. Basis gate decomposition time: 0ms
-Basis gates in transpiled circuit: cx:10, x:1, 
-Saving to: output.qasm
-======== QASMTrans ========
-Input circuit: ../data/test_benchmark/test.qasm (3 qubits)
-Basis gate mode: ibmq
-Backend (topology): ../data/devices/ibmq_toronto.json (27 physical qubits)
-Limit mode: True
-STEP-1. Initial gate decomposition time: 0ms
-STEP-2. Routing and mapping time: 0ms
-STEP-3. Basis gate decomposition time: 0ms
-Basis gates in transpiled circuit: cx:3, rz:18, sx:12, x:2, 
-Saving to: output.qasm
-======== QASMTrans ========
-Input circuit: ../data/test_benchmark/qram_n20.qasm (20 qubits)
-Basis gate mode: ibmq
-Backend (topology): ../data/devices/ibmq_toronto.json (27 physical qubits)
-Limit mode: True
-STEP-1. Initial gate decomposition time: 0ms
-STEP-2. Routing and mapping time: 24ms
-STEP-3. Basis gate decomposition time: 0ms
-Basis gates in transpiled circuit: cx:308, rz:126, sx:56, x:61, 
-Saving to: output.qasm
-======== QASMTrans ========
-Input circuit: ../data/test_benchmark/bv10.qasm (11 qubits)
-Basis gate mode: ibmq
-Backend (topology): ../data/devices/ibmq_toronto.json (27 physical qubits)
-Limit mode: True
-STEP-1. Initial gate decomposition time: 0ms
-STEP-2. Routing and mapping time: 0ms
-STEP-3. Basis gate decomposition time: 0ms
-Basis gates in transpiled circuit: cx:14, rz:21, sx:42, x:43, 
-Saving to: output.qasm
-======== QASMTrans ========
-Input circuit: ../data/test_benchmark/hhl_n7.qasm (7 qubits)
-Basis gate mode: ibmq
-Backend (topology): ../data/devices/ibmq_toronto.json (27 physical qubits)
-Limit mode: True
-STEP-1. Initial gate decomposition time: 0ms
-STEP-2. Routing and mapping time: 11ms
-STEP-3. Basis gate decomposition time: 0ms
-Basis gates in transpiled circuit: cx:385, rz:461, sx:332, x:1, 
-Saving to: output.qasm
-======== QASMTrans ========
-Input circuit: ../data/test_benchmark/square_root_n18_basis.qasm (18 qubits)
-Basis gate mode: ibmq
-Backend (topology): ../data/devices/ibmq_toronto.json (27 physical qubits)
-Limit mode: True
-STEP-1. Initial gate decomposition time: 0ms
-STEP-2. Routing and mapping time: 151ms
-STEP-3. Basis gate decomposition time: 4ms
-Basis gates in transpiled circuit: cx:2794, rz:1260, sx:676, x:818, 
-Saving to: output.qasm
-======== QASMTrans ========
-Input circuit: ../data/test_benchmark/sat_n11.qasm (11 qubits)
-Basis gate mode: ibmq
-Backend (topology): ../data/devices/ibmq_toronto.json (27 physical qubits)
-Limit mode: True
-STEP-1. Initial gate decomposition time: 0ms
-STEP-2. Routing and mapping time: 36ms
-STEP-3. Basis gate decomposition time: 1ms
-Basis gates in transpiled circuit: cx:627, rz:393, sx:198, x:232, 
-Saving to: output.qasm
+STEP-1. Initial gate decomposition time: 1227ms
+STEP-2. Routing and mapping time: 132351ms
+STEP-3. Basis gate decomposition time: 6967ms
+ total QASMTrans time: 140546ms

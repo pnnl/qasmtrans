@@ -27,6 +27,7 @@ void transpiler (shared_ptr<Circuit> circuit, shared_ptr<Chip> chip, map<string,
 {
     circuit->set_creg(list_cregs);
 
+
     //======================================== STEP-1: Initial Gate Decomposition =====================================
     cpu_timer initial_decompose_timer;
     initial_decompose_timer.start_timer();
@@ -52,7 +53,9 @@ void transpiler (shared_ptr<Circuit> circuit, shared_ptr<Chip> chip, map<string,
     Decompose(circuit,mode);
     decompose_timer.stop_timer();
     double decompose_time = decompose_timer.measure();
-    if (debug_level > 0) 
+    if (debug_level > 0) {
         cout << "STEP-3. Basis gate decomposition time: " << (IdxType)decompose_time << "ms"<< endl;
+        cout << " total QASMTrans time: " << (IdxType)(initial_decompose_time + routing_time + decompose_time) << "ms"<< endl;
+    }
 }
 #endif
