@@ -82,7 +82,7 @@ namespace QASMTrans
             /** X = [0 1]
                     [1 0]
              */
-            Gate G(OP::X, qubit);
+            Gate G(OP::X, qubit, -1, -1,1,0,0,0,0);
             gates->push_back(G);
         }
         void Y(IdxType qubit)

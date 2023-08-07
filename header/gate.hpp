@@ -328,6 +328,7 @@ namespace QASMTrans
                                         phi(_phi),
                                         lam(_lam),
                                         repetition(_repetition) {}
+        
         Gate(const Gate &g) : op_name(g.op_name),
                               qubit(g.qubit),
                               ctrl(g.ctrl),
