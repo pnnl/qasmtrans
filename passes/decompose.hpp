@@ -722,7 +722,7 @@ void Decompose(shared_ptr<Circuit> circuit, IdxType mode)
             {
                 // cout<<"gate name is"<<OP_NAMES[g.op_name]<<"angle is"<<g.theta<<endl;
                 decomposedGates_IonQ.push_back(Gate(OP::U, g.qubit, -1, -1,1, -PI/2,PI/2));
-                decomposedGates_IonQ.push_back(Gate(OP::ZZ, g.qubit, g.ctrl, 2, PI/2));
+                decomposedGates_IonQ.push_back(Gate(OP::ZZ, g.qubit, g.ctrl,-1, 2, PI/2));
                 decomposedGates_IonQ.push_back(Gate(OP::RZ, g.ctrl, -1,-1, 1, -PI/2));
                 decomposedGates_IonQ.push_back(Gate(OP::U, g.qubit, -1, -1,1, PI/2,PI));
                 decomposedGates_IonQ.push_back(Gate(OP::RZ, g.ctrl, -1, -1,1, -PI/2));
