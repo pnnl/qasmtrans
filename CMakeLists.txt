@@ -26,8 +26,8 @@ if(APPLE)
 else()
     message("Not running on Apple platform")
     # Configuration for non-Apple platforms
-    set(CMAKE_C_COMPILER cc)
-    set(CMAKE_CXX_COMPILER CC)
+    set(CMAKE_C_COMPILER gcc)
+    set(CMAKE_CXX_COMPILER g++)
     set(CMAKE_CUDA_HOST_COMPILER mpicxx)
 
    
