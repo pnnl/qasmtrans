@@ -14,6 +14,7 @@ To install the software, follow the steps below:
 
 ```bash
 git clone https://github.com/pnnl/qasmtrans.git
+cd qasmtrans
 mkdir build
 cd build
 cmake ..
@@ -24,7 +25,7 @@ make
 To run the transpiler, use the command below:
 
 ```bash
-./qasmtrans -i ../data/test_benchmark/bv10.qasm -m ibmq -c ../data/devices/ibmq_toronto -v 1
+./qasmtrans -i ../data/test_benchmark/bv10.qasm -m ibmq -c ../data/devices/ibmq_toronto.json -v 1
 ```
 
 ## Options
