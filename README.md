@@ -6,6 +6,8 @@ library dependency, facilitate deployment across platforms. It is specially desi
 circuits, such as those from HHL, QPE, quantum simulation, etc. QASMTrans is easy to extend for adding 
 new optimization passes and backend devices (see [extension](passes/README.md)). 
 
+Please look at our paper for details and performance: https://arxiv.org/pdf/2308.07581.pdf
+
 
 ## Installation
 To install the software, follow the steps below:
@@ -99,6 +101,23 @@ QASMTrans includes two external source header files:
 - Ang Li, Pacific Northwest National Laboratory
 
 Thanks to Gushu Li (University of Pennsylvania) for sharing the Python source code of Sabre[2]).
+
+
+## Citation format:
+
+- Fei Hua, Meng Wang, Gushu Li, Bo Peng, Chenxu Liu, Muqing Zheng, Samuel Stein, Yufei Ding, Eddy Z. Zhang, Travis S. Humble, Ang Li. "QASMTrans: A QASM based Quantum Transpiler Framework for NISQ Devices." arXiv preprint arXiv:2308.07581 (2023)
+
+Bibtex:
+```text
+@misc{hua2023qasmtrans,
+      title={QASMTrans: A QASM based Quantum Transpiler Framework for NISQ Devices}, 
+      author={Fei Hua and Meng Wang and Gushu Li and Bo Peng and Chenxu Liu and Muqing Zheng and Samuel Stein and Yufei Ding and Eddy Z. Zhang and Travis S. Humble and Ang Li},
+      year={2023},
+      eprint={2308.07581},
+      archivePrefix={arXiv},
+      primaryClass={quant-ph}
+}
+```
 
 ## References
 - [1] Cross, A.W., Bishop, L.S., Smolin, J.A., & Gambetta, J.M. (2017). Open quantum assembly language. arXiv preprint [arXiv:1707.03429](https://arxiv.org/abs/1707.03429).
