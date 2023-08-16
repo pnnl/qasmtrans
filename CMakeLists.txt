@@ -26,11 +26,16 @@ if(APPLE)
 else()
     message("Not running on Apple platform")
     # Configuration for non-Apple platforms
-    set(CMAKE_C_COMPILER cc)
-    set(CMAKE_CXX_COMPILER CC)
-    set(CMAKE_CUDA_HOST_COMPILER mpicxx)
+    if(cc)
+      set(CMAKE_C_COMPILER cc)
+    endif()
+    if(CC)
+      set(CMAKE_CXX_COMPILER CC)
+    endif()
+    if(mpicxx)
+      set(CMAKE_CUDA_HOST_COMPILER mpicxx)
+    endif()
 
-   
     # Set the nvshmem home directory
     list(APPEND CMAKE_PREFIX_PATH $ENV{HOME}/qasmtrans)
     # set(CMAKE_CUDA_FLAGS_RELEASE "-O3")
