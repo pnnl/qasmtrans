@@ -9,11 +9,12 @@
 #include <cstring>
 #include <vector>
 #include <bitset>
+
 #include "parser_util.hpp"
 #include "lexer.hpp"
 
-#include "qasmtrans.hpp"
-#include "circuit.hpp"
+#include "../QASMTransPrimitives.hpp"
+#include "../IR/circuit.hpp"
 
 using namespace std;
 using namespace QASMTrans;
@@ -51,9 +52,10 @@ private:
     void dump_defined_gates();
     void dump_cur_inst();
     void dump_gates();
+
 public:
     qasm_parser(const char *filename);
-    const char* filename;
+    const char *filename;
     string sim_method;
     IdxType num_qubits();
     void loadin_circuit(shared_ptr<Circuit> circuit);
@@ -61,19 +63,19 @@ public:
     map<string, qreg> get_list_qregs();
     ~qasm_parser();
 };
-string intToBitString(int num, int digitCount) 
+string intToBitString(int num, int digitCount)
 {
-    bitset<32> bitset(num);  // Adjust size as needed
+    bitset<32> bitset(num); // Adjust size as needed
     string bitString = bitset.to_string();
     // Get the last `digitCount` characters
     return bitString.substr(bitString.length() - digitCount);
 }
 
-map<string,creg> qasm_parser::get_list_cregs()
+map<string, creg> qasm_parser::get_list_cregs()
 {
-    return list_cregs; 
+    return list_cregs;
 }
-map<string,qreg> qasm_parser::get_list_qregs()
+map<string, qreg> qasm_parser::get_list_qregs()
 {
     return list_qregs;
 }
@@ -159,7 +161,8 @@ void qasm_parser::load_instruction()
     cur_inst.clear();
     getline(qasmFile, line);
     transform(line.begin(), line.end(), line.begin(), ::toupper);
-    if (!gen.process(line)) return;
+    if (!gen.process(line))
+        return;
     if (gen.size() > 0)
     {
         sr.process(gen);
@@ -496,9 +499,9 @@ void qasm_parser::dump_gates()
     }
 }
 
-IdxType qasm_parser::num_qubits() 
-{ 
-    return global_qubit_offset; 
+IdxType qasm_parser::num_qubits()
+{
+    return global_qubit_offset;
 }
 
 void qasm_parser::generate_circuit(shared_ptr<Circuit> circuit, qasm_gate gate)
@@ -506,7 +509,9 @@ void qasm_parser::generate_circuit(shared_ptr<Circuit> circuit, qasm_gate gate)
     auto gate_name = gate.name;
     auto params = gate.params;
     auto qubits = gate.qubits;
-    if (gate.name == MEASURE) {}
+    if (gate.name == MEASURE)
+    {
+    }
     else if (gate_name == "U")
         circuit->U(params[0], params[1], params[2], qubits[0]);
     else if (gate_name == "U1")

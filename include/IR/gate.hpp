@@ -4,7 +4,7 @@
 #include <sstream>
 #include <string>
 #include <cstring>
-#include "qasmtrans.hpp"
+#include "../QASMTransPrimitives.hpp"
 
 namespace QASMTrans
 {
@@ -328,7 +328,7 @@ namespace QASMTrans
                                         phi(_phi),
                                         lam(_lam),
                                         repetition(_repetition) {}
-        
+
         Gate(const Gate &g) : op_name(g.op_name),
                               qubit(g.qubit),
                               ctrl(g.ctrl),
@@ -376,11 +376,11 @@ namespace QASMTrans
             }
             if (ctrl >= 0)
             {
-                ss << "q["<<ctrl << "],q[" << qubit<<"]";
+                ss << "q[" << ctrl << "],q[" << qubit << "]";
             }
             else
             {
-                ss << "q["<<qubit<<"]";
+                ss << "q[" << qubit << "]";
             }
             // ss << std::endl;
             return ss.str();

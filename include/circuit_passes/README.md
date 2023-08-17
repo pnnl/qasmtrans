@@ -1,6 +1,6 @@
 # QASMTrans Passes
 
-Welcome to the QASMTrans Passes repository. This repository currently includes the following passes:
+Welcome to the QASMTrans Circuit Passes directory. QASMTrans currently includes the following circuit passes:
 
 - `transpiler.hpp`: Main function calls to the passes.
 - `routing_mapping.hpp`: Routing and mapping pass.
@@ -18,12 +18,10 @@ To contribute to this project by adding more passes, please follow the steps out
 You should place new pass files under the `passes` folder. For instance, `gate_optimization.hpp` is a planned pass to support gate merging and cancellation. The file will be construct as below:
 
 ```cpp
+#pragma once
 
-#ifndef GATE_OPTIMIZATION_H
-#define GATE_OPTIMIZATION_H
-
-#include "gate.hpp"
-#include "circuit.hpp"
+#include "../IR/gate.hpp"
+#include "../IR/circuit.hpp"
 
 using namespace QASMTrans;
 
@@ -32,12 +30,11 @@ void gate_optimization(std::shared_ptr<QASMTrans::Circuit> circuit)
   ... // main function
 }
 
-#endif
 ```
 
 ### 2. Link the Pass File
 
-Once you have created `gate_optimization.hpp`, you need to link it to `compiler.hpp` with the following code in the `transpiler.h` file:
+Once you have created `gate_optimization.hpp`, you need to link it to `compiler.hpp` with the following code in the `transpiler.hpp` file:
 
 ```cpp
 # include "gate_optimization.hpp"
