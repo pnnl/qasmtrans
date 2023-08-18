@@ -1,16 +1,16 @@
 #pragma once
-#ifndef ROUTING_MAPPING_HPP
-#define ROUTING_MAPPING_HPP
 
 #include <string>
 #include <random>
-#include "json.hpp"
-#include "qasmtrans.hpp"
-#include "util.hpp"
-#include "gate.hpp"
-#include "circuit.hpp"
-#include "chip.hpp"
-#include "graph.hpp"
+
+#include "../QASMTransPrimitives.hpp"
+
+#include "../IR/gate.hpp"
+#include "../IR/circuit.hpp"
+#include "../IR/chip.hpp"
+#include "../IR/graph.hpp"
+
+#include "../nlomann/json.hpp"
 
 using namespace QASMTrans;
 using namespace std;
@@ -93,10 +93,10 @@ void DAG_generator(IdxType qubit_num, vector<vector<IdxType>> &circuit, vector<I
 // # 3 - executed
 
 // #qubit_state
-// # 0 - not occupied in current layer	  
+// # 0 - not occupied in current layer
 // # 1 - occupied in current layer
 
-void maintain_layer(vector<IdxType> &current_layer_gates_idx, set<IdxType> &gate_execute_idx_list, vector<vector<IdxType>>& circuit, vector<IdxType> &gate_state, vector<vector<IdxType>> &following_gate_idx, vector<IdxType> &qubit_state, vector<IdxType> &gate_dependency, vector<IdxType> &updated_layer_gates_idx, vector<IdxType> &future_layer_gates_idx,IdxType flag)
+void maintain_layer(vector<IdxType> &current_layer_gates_idx, set<IdxType> &gate_execute_idx_list, vector<vector<IdxType>> &circuit, vector<IdxType> &gate_state, vector<vector<IdxType>> &following_gate_idx, vector<IdxType> &qubit_state, vector<IdxType> &gate_dependency, vector<IdxType> &updated_layer_gates_idx, vector<IdxType> &future_layer_gates_idx, IdxType flag)
 {
     unordered_set<IdxType> updated_set;
     updated_layer_gates_idx.clear();
@@ -138,14 +138,15 @@ void maintain_layer(vector<IdxType> &current_layer_gates_idx, set<IdxType> &gate
             if (gate_state[gate_idx] == 0)
             {
                 gate_state[gate_idx] = 1;
-                if (flag != 0) {
+                if (flag != 0)
+                {
                     future_layer_gates_idx.push_back(gate_idx);
                 }
-                
             }
         }
     }
-    if (flag == 0) {
+    if (flag == 0)
+    {
         for (IdxType gate_idx = 0; gate_idx < circuit.size(); gate_idx++)
         {
             if (gate_state[gate_idx] == 1)
@@ -157,7 +158,6 @@ void maintain_layer(vector<IdxType> &current_layer_gates_idx, set<IdxType> &gate
     sort(updated_layer_gates_idx.begin(), updated_layer_gates_idx.end());
     sort(future_layer_gates_idx.begin(), future_layer_gates_idx.end());
 }
-
 
 double heuristic(const vector<IdxType> &new_mapping, const vector<IdxType> &current_layer_gates_idx, const vector<IdxType> &future_gates_idx, const vector<vector<IdxType>> &distance_mat, const vector<vector<IdxType>> &circuit)
 {
@@ -201,7 +201,7 @@ vector<IdxType> find_reverse_mapping(const vector<IdxType> &mapping, IdxType qub
         else
         {
             // Handle the error in an appropriate way for your program.
-            //cerr << "Invalid qubit index: " << p_qubit << endl;
+            // cerr << "Invalid qubit index: " << p_qubit << endl;
         }
     }
     return reverse_mapping;
@@ -243,8 +243,8 @@ vector<IdxType> pick_one_movement(vector<IdxType> &mapping, const vector<IdxType
     return pair;
 }
 
-set<IdxType> find_executable_gates( const vector<IdxType>& mapping, const vector<IdxType>& current_layer, 
-    const vector<vector<IdxType>>& circuit, const vector<vector<IdxType>>& distance_mat)
+set<IdxType> find_executable_gates(const vector<IdxType> &mapping, const vector<IdxType> &current_layer,
+                                   const vector<vector<IdxType>> &circuit, const vector<vector<IdxType>> &distance_mat)
 {
     set<IdxType> executable_gates;
     // Pre-allocate memory using .reserve() for the worst-case scenario where every gate is executable.
@@ -252,7 +252,7 @@ set<IdxType> find_executable_gates( const vector<IdxType>& mapping, const vector
     for (IdxType gate_idx : current_layer)
     {
         IdxType mapped_gate_zero = mapping[circuit[gate_idx][0]]; // Avoid repeated access by storing values in local variables.
-        IdxType mapped_gate_one = mapping[circuit[gate_idx][1]]; // Avoid repeated access by storing values in local variables.
+        IdxType mapped_gate_one = mapping[circuit[gate_idx][1]];  // Avoid repeated access by storing values in local variables.
         if (distance_mat[mapped_gate_zero][mapped_gate_one] == 1)
         {
             executable_gates.insert(gate_idx);
@@ -294,12 +294,12 @@ vector<pair<IdxType, IdxType>> sortWithSwaps(vector<IdxType> &lst)
     return swaps;
 }
 
-IdxType one_round_optimization(vector<IdxType> &initial_mapping, vector<Gate> circuit_gate, vector<vector<IdxType>> distance_mat, 
-        vector<Gate> gate_info, shared_ptr<Chip> chip, vector<vector<IdxType>> gate_qubit,vector<Gate> &return_circuit,IdxType debug_level)
+IdxType one_round_optimization(vector<IdxType> &initial_mapping, vector<Gate> circuit_gate, vector<vector<IdxType>> distance_mat,
+                               vector<Gate> gate_info, shared_ptr<Chip> chip, vector<vector<IdxType>> gate_qubit, vector<Gate> &return_circuit, IdxType debug_level)
 {
     IdxType swap_num = 0;
     vector<IdxType> mapping = initial_mapping;
-    
+
     //^find all single qubit dependency
     IdxType executed_gates_num = 0;
     IdxType gate_num = circuit_gate.size();
@@ -324,7 +324,7 @@ IdxType one_round_optimization(vector<IdxType> &initial_mapping, vector<Gate> ci
     vector<IdxType> future_layer;
     set<IdxType> gate_execute_idx_list;
     vector<IdxType> updated_layer_gates_idx;
-    maintain_layer(current_layer, gate_execute_idx_list, circuit, gate_state, following_gates_idx, qubit_state, gate_dependency, updated_layer_gates_idx, future_layer,0);
+    maintain_layer(current_layer, gate_execute_idx_list, circuit, gate_state, following_gates_idx, qubit_state, gate_dependency, updated_layer_gates_idx, future_layer, 0);
     current_layer = updated_layer_gates_idx;
     IdxType layer_index = 0;
     IdxType single_gate_count = 0;
@@ -348,23 +348,25 @@ IdxType one_round_optimization(vector<IdxType> &initial_mapping, vector<Gate> ci
 
     IdxType two_qubit_gate_index = 0;
     IdxType single_qubit_index = 0;
-    
-    for (IdxType i = 0; i < gate_info.size(); ++i) 
+
+    for (IdxType i = 0; i < gate_info.size(); ++i)
     {
-        const auto& gate = gate_info[i];
+        const auto &gate = gate_info[i];
         // If it's a two-qubit gate, we check whether the involved qubits were touched by a single-qubit gate before
-        if (gate.ctrl != -1) {
+        if (gate.ctrl != -1)
+        {
             // We look at all the previous single-qubit gates involving the control or target qubits
             if (qubit_to_gate_indices.count(gate.ctrl))
             {
-                for (const auto& idx : qubit_to_gate_indices[gate.ctrl])
+                for (const auto &idx : qubit_to_gate_indices[gate.ctrl])
                 {
                     dependency_vector[two_qubit_gate_index].push_back(idx);
                 }
                 qubit_to_gate_indices.erase(gate.ctrl);
             }
-            if (qubit_to_gate_indices.count(gate.qubit)) {
-                for (const auto& idx : qubit_to_gate_indices[gate.qubit])
+            if (qubit_to_gate_indices.count(gate.qubit))
+            {
+                for (const auto &idx : qubit_to_gate_indices[gate.qubit])
                 {
                     dependency_vector[two_qubit_gate_index].push_back(idx);
                 }
@@ -375,7 +377,7 @@ IdxType one_round_optimization(vector<IdxType> &initial_mapping, vector<Gate> ci
         // We assume any other gate is a single-qubit gate
         else
         {
-            if(strcmp(OP_NAMES[gate_info[i].op_name], "MA") != 0)
+            if (strcmp(OP_NAMES[gate_info[i].op_name], "MA") != 0)
             {
                 qubit_to_gate_indices[gate.qubit].push_back(single_qubit_index++);
             }
@@ -416,10 +418,10 @@ IdxType one_round_optimization(vector<IdxType> &initial_mapping, vector<Gate> ci
         {
             cpu_timer trans_timer;
             trans_timer.start_timer();
-            maintain_layer(current_layer, execute_gates_idx, circuit, gate_state, following_gates_idx, qubit_state, gate_dependency, updated_layer_gates_idx, future_layer,1);
+            maintain_layer(current_layer, execute_gates_idx, circuit, gate_state, following_gates_idx, qubit_state, gate_dependency, updated_layer_gates_idx, future_layer, 1);
             trans_timer.stop_timer();
             total_maIdxTypeainlayer_time += trans_timer.measure();
-          
+
             current_layer = updated_layer_gates_idx;
             executed_gates_num += execute_gates_idx.size();
         }
@@ -432,7 +434,7 @@ IdxType one_round_optimization(vector<IdxType> &initial_mapping, vector<Gate> ci
             total_pickone_time += trans_timer.measure();
             // cout << "swap " << pair[0] << " " << pair[1] << endl;
             // all_gate_output.push_back({pair[0], pair[1]});
-            Gate SWAPG = Gate( OP::SWAP, IdxType(pair[1]), IdxType(pair[0]));
+            Gate SWAPG = Gate(OP::SWAP, IdxType(pair[1]), IdxType(pair[0]));
             return_circuit.push_back(SWAPG);
             // all_gate_type.push_back(1);
             swap_num += 1;
@@ -441,8 +443,10 @@ IdxType one_round_optimization(vector<IdxType> &initial_mapping, vector<Gate> ci
         // executed_gates_num += gate_num;
     }
     single_gate_count = 0;
-    for (IdxType i = 0; i < single_gate_info.size();i++) {
-        if(single_gate_info[i].ctrl == -1 && strcmp(OP_NAMES[single_gate_info[i].op_name], "MA") != 0 && visited_gate.find(i) == visited_gate.end()) {
+    for (IdxType i = 0; i < single_gate_info.size(); i++)
+    {
+        if (single_gate_info[i].ctrl == -1 && strcmp(OP_NAMES[single_gate_info[i].op_name], "MA") != 0 && visited_gate.find(i) == visited_gate.end())
+        {
             Gate cur_gate = single_gate_info[i];
             IdxType q_qubit = mapping[single_gate_info[i].qubit];
             cur_gate.qubit = q_qubit;
@@ -450,10 +454,11 @@ IdxType one_round_optimization(vector<IdxType> &initial_mapping, vector<Gate> ci
         }
     }
     initial_mapping = mapping;
-    if(debug_level > 1) {
-        cout<<"total maIdxTypeainlayer time is: "<< fixed << setprecision(1) 
-              << total_maIdxTypeainlayer_time<<endl;
-        cout<<"total pick one swap time is: "<< fixed << setprecision(1) <<total_pickone_time<<endl;
+    if (debug_level > 1)
+    {
+        cout << "total maIdxTypeainlayer time is: " << fixed << setprecision(1)
+             << total_maIdxTypeainlayer_time << endl;
+        cout << "total pick one swap time is: " << fixed << setprecision(1) << total_pickone_time << endl;
     }
     return swap_num;
 }
@@ -462,7 +467,7 @@ void Routing(shared_ptr<Circuit> circuit, shared_ptr<Chip> chip, IdxType debug_l
 {
     IdxType n_qubits = IdxType(circuit->num_qubits());
     vector<Gate> gate_info = circuit->get_gates();
- 
+
     vector<Gate> cx_gates;
     for (IdxType i = 0; i < gate_info.size(); i++)
     {
@@ -479,7 +484,7 @@ void Routing(shared_ptr<Circuit> circuit, shared_ptr<Chip> chip, IdxType debug_l
     mt19937 g(rd());
     shuffle(initial_mapping.begin(), initial_mapping.end(), g);
     if (debug_level > 1)
-    cout<<"******* 1st round sabre optimization *******"<<endl;
+        cout << "******* 1st round sabre optimization *******" << endl;
     //^ sabre optimization
     // I need gate qubit, and also gate name
     vector<pair<IdxType, IdxType>> cx_gates_pair;
@@ -490,11 +495,11 @@ void Routing(shared_ptr<Circuit> circuit, shared_ptr<Chip> chip, IdxType debug_l
     }
     vector<Gate> return_circuit;
     return_circuit.clear();
-    IdxType swap_num = one_round_optimization(initial_mapping, cx_gates, chip->distance_mat, gate_info, chip, all_gates_index, return_circuit,debug_level);
+    IdxType swap_num = one_round_optimization(initial_mapping, cx_gates, chip->distance_mat, gate_info, chip, all_gates_index, return_circuit, debug_level);
 
     // ^ second round optimization
     if (debug_level > 1)
-    cout<<"******* 2nd round sabre optimization *******"<<endl;
+        cout << "******* 2nd round sabre optimization *******" << endl;
     reverse(cx_gates.begin(), cx_gates.end());
     vector<string> reverse_name;
     vector<vector<IdxType>> reverse_gate_qubit;
@@ -504,22 +509,24 @@ void Routing(shared_ptr<Circuit> circuit, shared_ptr<Chip> chip, IdxType debug_l
         reverse_gate_qubit.push_back(all_gates_index[i - 1]);
     }
     return_circuit.clear();
-    swap_num = one_round_optimization(initial_mapping, cx_gates, chip->distance_mat, gate_info, chip, reverse_gate_qubit, return_circuit,debug_level);
+    swap_num = one_round_optimization(initial_mapping, cx_gates, chip->distance_mat, gate_info, chip, reverse_gate_qubit, return_circuit, debug_level);
 
     //^ third
     if (debug_level > 1)
-    cout<<"******* 3rd round sabre optimization *******"<<endl;
+        cout << "******* 3rd round sabre optimization *******" << endl;
     return_circuit.clear();
     reverse(cx_gates.begin(), cx_gates.end());
     // circuit->set_cur_mapping(initial_mapping);
-    if (debug_level > 1){
-        cout<<"initial mapping is:";
-        for (IdxType ini : initial_mapping) {
-            cout<<ini<<" ";
+    if (debug_level > 1)
+    {
+        cout << "initial mapping is:";
+        for (IdxType ini : initial_mapping)
+        {
+            cout << ini << " ";
         }
-        cout<<endl;
+        cout << endl;
     }
-    swap_num = one_round_optimization(initial_mapping, cx_gates, chip->distance_mat, gate_info, chip, all_gates_index, return_circuit,debug_level);
+    swap_num = one_round_optimization(initial_mapping, cx_gates, chip->distance_mat, gate_info, chip, all_gates_index, return_circuit, debug_level);
     vector<Gate> gate_info_after_transpiler;
     vector<Gate> decompose_gate_info;
     vector<string> decompose_gate_name;
@@ -535,4 +542,3 @@ void Routing(shared_ptr<Circuit> circuit, shared_ptr<Chip> chip, IdxType debug_l
     circuit->set_gates(return_circuit);
     n_gates = IdxType(return_circuit.size());
 }
-#endif

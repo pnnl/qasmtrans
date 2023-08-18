@@ -5,7 +5,7 @@
 #include <queue>
 #include <cmath>
 #include "lexer.hpp"
-#include "qasmtrans.hpp"
+#include "../QASMTransPrimitives.hpp"
 
 using namespace std;
 using namespace lexertk;

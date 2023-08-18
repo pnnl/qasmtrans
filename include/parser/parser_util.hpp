@@ -10,7 +10,7 @@
 #include <regex>
 #include <cassert>
 #include "lexer.hpp"
-#include "qasmtrans.hpp"
+
 #include "qasm_parser_expr.hpp"
 
 using namespace std;
@@ -49,7 +49,7 @@ string DEFAULT_GATES[] = {
     "CCX", "CRX", "CRY", "CRZ", "CU1", "CU3",
     "RESET", "SWAP", "CSWAP",
     "ID", "RI", "P", "CS", "CSDG", "CT", "CTDG", "CSX", "CP",
-    "RZZ", "RXX", "RYY","RCCX"};
+    "RZZ", "RXX", "RYY", "RCCX"};
 
 const string OPENQASM("OPENQASM");
 const string QREG("QREG");
@@ -214,13 +214,16 @@ string convert_outcome(IdxType original_out, map<string, creg> &cregs)
     {
         auto key = entry.first;
         auto val = entry.second;
-        if (cur_index != 0) ss << " ";
+        if (cur_index != 0)
+            ss << " ";
         vector<IdxType> creg_qubit_indices = val.qubit_indices;
         for (IdxType i = creg_qubit_indices.size() - 1; i >= 0; i--)
         {
             IdxType index = creg_qubit_indices[i];
-            if (index == UN_DEF) ss << 0;
-            else ss << ((original_out >> index) & 1);
+            if (index == UN_DEF)
+                ss << 0;
+            else
+                ss << ((original_out >> index) & 1);
         }
         cur_index++;
     }
