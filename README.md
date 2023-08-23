@@ -4,9 +4,10 @@ circuits compiled for a particular NISQ device (e.g., from IBMQ, Rigetti, IonQ, 
 the contraints of basis gates and qubit topology. QASMTrans is purely developed in C++ without external
 library dependency, facilitate deployment across platforms. It is specially designed for emerging deep
 circuits, such as those from HHL, QPE, quantum simulation, etc. QASMTrans is easy to extend for adding 
-new optimization passes and backend devices (see [extension](passes/README.md)). 
+new optimization passes and backend devices (see [extension](passes/README.md)). For some examplar 
+QASM circuits, please check our [QASMBench](https://github.com/pnnl/qasmbench).
 
-Please look at our paper for details and performance: https://arxiv.org/pdf/2308.07581.pdf
+Please check our paper for details and performance: https://arxiv.org/pdf/2308.07581.pdf
 
 
 ## Installation
