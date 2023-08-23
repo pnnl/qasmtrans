@@ -768,4 +768,31 @@ void Decompose(shared_ptr<Circuit> circuit, IdxType mode)
         circuit->set_gates(decomposedGates_IonQ);
         return;
     }
+    else if (mode == 4)
+    {
+        vector<Gate> decomposedGates_IonQ;
+        for (Gate g : decomposedGates)
+        {
+            if (strcmp(OP_NAMES[g.op_name], "RZ") == 0)
+            {
+                decomposedGates_IonQ.push_back(BasicRZ(g.theta, g.qubit));
+            }
+            else if (strcmp(OP_NAMES[g.op_name], "SX") == 0)
+            {
+                decomposedGates_IonQ.push_back(Gate(OP::RX, g.qubit, -1, -1, 1, PI / 2));
+            }
+            else if (strcmp(OP_NAMES[g.op_name], "X") == 0)
+            {
+                decomposedGates_IonQ.push_back(Gate(OP::RX, g.qubit, -1, -1, 1, PI));
+            }
+            else if (strcmp(OP_NAMES[g.op_name], "CX") == 0)
+            {
+                decomposedGates_IonQ.push_back(Gate(OP::H, g.qubit));
+                decomposedGates_IonQ.push_back(Gate(OP::CZ, g.qubit, g.ctrl, 2));
+                decomposedGates_IonQ.push_back(Gate(OP::H, g.qubit));
+            }
+        }
+        circuit->set_gates(decomposedGates_IonQ);
+        return;
+    }
 }
