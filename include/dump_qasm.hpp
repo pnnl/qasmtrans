@@ -62,6 +62,11 @@ void dumpQASM(std::shared_ptr<QASMTrans::Circuit> circuit, const char *filename,
             file_name << output_path << "transpiled_Rigetti_" << new_file;
             output_path = output_path + "transpiled_Rigetti_" + new_file;
         }
+        else if (mode == 4)
+        {
+            file_name << output_path << "transpiled_Quafu_" << new_file;
+            output_path = output_path + "transpiled_Quafu_" + new_file;
+        }
         qasm_file.open(file_name.str());
     }
     else

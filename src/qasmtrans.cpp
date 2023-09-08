@@ -114,6 +114,10 @@ int main(int argc, char **argv)
             {
                 mode = 3;
             }
+            else if (mode_name == "Quafu" || mode_name == "quafu")
+            {
+                mode = 4;
+            }
             else
             {
                 std::cout << "Invalid mode name, please check" << std::endl;
