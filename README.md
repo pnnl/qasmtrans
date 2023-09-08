@@ -126,7 +126,7 @@ Bibtex:
 - [2] Li, G., Ding, Y., & Xie, Y. (2019). Tackling the qubit mapping problem for NISQ-era quantum devices. In Proceedings of the Twenty-Fourth International Conference on Architectural Support for Programming Languages and Operating Systems (pp. 1001-1014).(https://dl.acm.org/doi/abs/10.1145/3297858.3304023)
 
 ## Acknowledgments
-IPID: 32821-E, IR: PNNL-SA-188499, Export Control: EAR99, Software DOI: 10.11578/dc.20230814.4
+PNNL IPID: 32821-E, IR: PNNL-SA-188499, Export Control: EAR99, Software DOI: 10.11578/dc.20230814.4
 
 This software is supported by the U.S. Department of Energy, Office of Science, National Quantum Information Science Research Centers,
 Co-design Center for Quantum Advantage (C2QA) under contract number DE-SC0012704. The software is also supported by the U.S. 
