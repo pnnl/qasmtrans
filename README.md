@@ -29,6 +29,15 @@ To run the transpiler, use the command below:
 ./qasmtrans -i ../data/test_benchmark/bv10.qasm -m ibmq -c ../data/devices/ibmq_toronto.json -v 1
 ```
 
+## Correctness verification
+We also test our QASMTrans correctness, we use the same simulator from qiskit to test our transpiled qasm file and qiskit own transpiled file, we pass the file when the differences is less than 0.5%, to run the test simply run the command below:
+
+```bash
+cd test
+sh validation_test.sh
+```
+
+All the detailed result will be stored in compare_summary
 ## Options
 QASMTrans command-line options:
 
