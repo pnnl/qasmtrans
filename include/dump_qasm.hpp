@@ -105,7 +105,8 @@ void dumpQASM(std::shared_ptr<QASMTrans::Circuit> circuit, const char *filename,
         {
             for (auto &qubit : creg.second.qubit_indices)
             {
-                qasm_file << "measure q[" << circuit->initial_mapping[creg_index] << "] -> " << toLowerCase(creg.first) << "[" << creg_index++ << "];\n";
+                qasm_file << "measure q[" << circuit->initial_mapping[creg_index] << "] -> " << toLowerCase(creg.first) << "[" << creg_index << "];\n";
+                ++creg_index;
             }
         }
         // Close the file

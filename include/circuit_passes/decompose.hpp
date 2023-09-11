@@ -702,97 +702,97 @@ void Decompose(shared_ptr<Circuit> circuit, IdxType mode)
     }
     else if (mode == 2)
     {
-        vector<Gate> decomposedGates_IonQ;
+        vector<Gate> decomposedGates_Quantinuum;
         for (Gate g : decomposedGates)
         {
             if (strcmp(OP_NAMES[g.op_name], "RZ") == 0)
             {
                 // cout<<"gate name is"<<OP_NAMES[g.op_name]<<"angle is"<<g.theta<<endl;
-                decomposedGates_IonQ.push_back(BasicRZ(g.theta, g.qubit));
+                decomposedGates_Quantinuum.push_back(BasicRZ(g.theta, g.qubit));
             }
             else if (strcmp(OP_NAMES[g.op_name], "SX") == 0)
             {
                 // cout<<"gate name is"<<OP_NAMES[g.op_name]<<"angle is"<<g.theta<<endl;
-                decomposedGates_IonQ.push_back(Gate(OP::U, g.qubit, -1, -1, 1, PI / 2));
+                decomposedGates_Quantinuum.push_back(Gate(OP::U, g.qubit, -1, -1, 1, PI / 2));
             }
             else if (strcmp(OP_NAMES[g.op_name], "X") == 0)
             {
                 // cout<<"gate name is"<<OP_NAMES[g.op_name]<<"angle is"<<g.theta<<endl;
-                decomposedGates_IonQ.push_back(Gate(OP::U, g.qubit, -1, -1, 1, PI));
+                decomposedGates_Quantinuum.push_back(Gate(OP::U, g.qubit, -1, -1, 1, PI));
             }
             else if (strcmp(OP_NAMES[g.op_name], "CX") == 0)
             {
                 // cout<<"gate name is"<<OP_NAMES[g.op_name]<<"angle is"<<g.theta<<endl;
-                decomposedGates_IonQ.push_back(Gate(OP::U, g.qubit, -1, -1, 1, -PI / 2, PI / 2));
-                decomposedGates_IonQ.push_back(Gate(OP::ZZ, g.qubit, g.ctrl, -1, 2, PI / 2));
-                decomposedGates_IonQ.push_back(Gate(OP::RZ, g.ctrl, -1, -1, 1, -PI / 2));
-                decomposedGates_IonQ.push_back(Gate(OP::U, g.qubit, -1, -1, 1, PI / 2, PI));
-                decomposedGates_IonQ.push_back(Gate(OP::RZ, g.ctrl, -1, -1, 1, -PI / 2));
+                decomposedGates_Quantinuum.push_back(Gate(OP::U, g.qubit, -1, -1, 1, -PI / 2, PI / 2));
+                decomposedGates_Quantinuum.push_back(Gate(OP::ZZ, g.qubit, g.ctrl, -1, 2, PI / 2));
+                decomposedGates_Quantinuum.push_back(Gate(OP::RZ, g.ctrl, -1, -1, 1, -PI / 2));
+                decomposedGates_Quantinuum.push_back(Gate(OP::U, g.qubit, -1, -1, 1, PI / 2, PI));
+                decomposedGates_Quantinuum.push_back(Gate(OP::RZ, g.ctrl, -1, -1, 1, -PI / 2));
             }
         }
-        circuit->set_gates(decomposedGates_IonQ);
+        circuit->set_gates(decomposedGates_Quantinuum);
         return;
     }
     else if (mode == 3)
     {
-        vector<Gate> decomposedGates_IonQ;
+        vector<Gate> decomposedGates_Rigetti;
         for (Gate g : decomposedGates)
         {
             if (strcmp(OP_NAMES[g.op_name], "RZ") == 0)
             {
                 // cout<<"gate name is"<<OP_NAMES[g.op_name]<<"angle is"<<g.theta<<endl;
-                decomposedGates_IonQ.push_back(BasicRZ(g.theta, g.qubit));
+                decomposedGates_Rigetti.push_back(BasicRZ(g.theta, g.qubit));
             }
             else if (strcmp(OP_NAMES[g.op_name], "SX") == 0)
             {
                 // cout<<"gate name is"<<OP_NAMES[g.op_name]<<"angle is"<<g.theta<<endl;
-                decomposedGates_IonQ.push_back(Gate(OP::RX, g.qubit, -1, -1, 1, PI / 2));
+                decomposedGates_Rigetti.push_back(Gate(OP::RX, g.qubit, -1, -1, 1, PI / 2));
             }
             else if (strcmp(OP_NAMES[g.op_name], "X") == 0)
             {
                 // cout<<"gate name is"<<OP_NAMES[g.op_name]<<"angle is"<<g.theta<<endl;
-                decomposedGates_IonQ.push_back(Gate(OP::RX, g.qubit, -1, -1, 1, PI));
+                decomposedGates_Rigetti.push_back(Gate(OP::RX, g.qubit, -1, -1, 1, PI));
             }
             else if (strcmp(OP_NAMES[g.op_name], "CX") == 0)
             {
                 // cout<<"gate name is"<<OP_NAMES[g.op_name]<<"angle is"<<g.theta<<endl;
-                decomposedGates_IonQ.push_back(Gate(OP::RZ, g.qubit, -1, -1, 1, -PI / 2));
-                decomposedGates_IonQ.push_back(Gate(OP::RX, g.qubit, -1, -1, 1, -PI / 2));
-                decomposedGates_IonQ.push_back(Gate(OP::RZ, g.qubit, -1, -1, 1, -PI / 2));
-                decomposedGates_IonQ.push_back(Gate(OP::CZ, g.qubit, g.ctrl, 2));
-                decomposedGates_IonQ.push_back(Gate(OP::RZ, g.qubit, -1, -1, 1, -PI / 2));
-                decomposedGates_IonQ.push_back(Gate(OP::RX, g.qubit, -1, -1, 1, -PI / 2));
-                decomposedGates_IonQ.push_back(Gate(OP::RZ, g.qubit, -1, -1, 1, -PI / 2));
+                decomposedGates_Rigetti.push_back(Gate(OP::RZ, g.qubit, -1, -1, 1, -PI / 2));
+                decomposedGates_Rigetti.push_back(Gate(OP::RX, g.qubit, -1, -1, 1, -PI / 2));
+                decomposedGates_Rigetti.push_back(Gate(OP::RZ, g.qubit, -1, -1, 1, -PI / 2));
+                decomposedGates_Rigetti.push_back(Gate(OP::CZ, g.qubit, g.ctrl, 2));
+                decomposedGates_Rigetti.push_back(Gate(OP::RZ, g.qubit, -1, -1, 1, -PI / 2));
+                decomposedGates_Rigetti.push_back(Gate(OP::RX, g.qubit, -1, -1, 1, -PI / 2));
+                decomposedGates_Rigetti.push_back(Gate(OP::RZ, g.qubit, -1, -1, 1, -PI / 2));
             }
         }
-        circuit->set_gates(decomposedGates_IonQ);
+        circuit->set_gates(decomposedGates_Rigetti);
         return;
     }
     else if (mode == 4)
     {
-        vector<Gate> decomposedGates_IonQ;
+        vector<Gate> decomposedGates_Quafu;
         for (Gate g : decomposedGates)
         {
             if (strcmp(OP_NAMES[g.op_name], "RZ") == 0)
             {
-                decomposedGates_IonQ.push_back(BasicRZ(g.theta, g.qubit));
+                decomposedGates_Quafu.push_back(BasicRZ(g.theta, g.qubit));
             }
             else if (strcmp(OP_NAMES[g.op_name], "SX") == 0)
             {
-                decomposedGates_IonQ.push_back(Gate(OP::RX, g.qubit, -1, -1, 1, PI / 2));
+                decomposedGates_Quafu.push_back(Gate(OP::RX, g.qubit, -1, -1, 1, PI / 2));
             }
             else if (strcmp(OP_NAMES[g.op_name], "X") == 0)
             {
-                decomposedGates_IonQ.push_back(Gate(OP::RX, g.qubit, -1, -1, 1, PI));
+                decomposedGates_Quafu.push_back(Gate(OP::RX, g.qubit, -1, -1, 1, PI));
             }
             else if (strcmp(OP_NAMES[g.op_name], "CX") == 0)
             {
-                decomposedGates_IonQ.push_back(Gate(OP::H, g.qubit));
-                decomposedGates_IonQ.push_back(Gate(OP::CZ, g.qubit, g.ctrl, 2));
-                decomposedGates_IonQ.push_back(Gate(OP::H, g.qubit));
+                decomposedGates_Quafu.push_back(Gate(OP::H, g.qubit));
+                decomposedGates_Quafu.push_back(Gate(OP::CZ, g.qubit, g.ctrl, 2));
+                decomposedGates_Quafu.push_back(Gate(OP::H, g.qubit));
             }
         }
-        circuit->set_gates(decomposedGates_IonQ);
+        circuit->set_gates(decomposedGates_Quafu);
         return;
     }
 }
