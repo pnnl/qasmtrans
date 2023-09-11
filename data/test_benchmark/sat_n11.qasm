@@ -106,7 +106,7 @@ h v[3];
 h v[4];
 
 // Measurements
-measure v[1] -> m[0];
-measure v[2] -> m[1];
-measure v[3] -> m[2];
-measure v[4] -> m[3];
+measure v[0] -> m[0];
+measure v[1] -> m[1];
+measure v[2] -> m[2];
+measure v[3] -> m[3];
