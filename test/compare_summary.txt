@@ -1,2 +1,11 @@
 
 ===== Processing ../data/test_benchmark/qaoa_n6.qasm: =====
+the fidelity difference is 0.0032895
+The results of the two circuits are considered the same!
+===== Processing ../data/test_benchmark/gcm_h6.qasm: =====
+the fidelity difference is 0.00015875
+The results of the two circuits are considered the same!
+===== Processing ../data/test_benchmark/test.qasm: =====
+the fidelity difference is 0.0
+The results of the two circuits are considered the same!
+===== Processing ../data/test_benchmark/qram_n20.qasm: =====

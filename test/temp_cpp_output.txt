@@ -1,0 +1,11 @@
+======== QASMTrans ========
+Input circuit: ../data/test_benchmark/qram_n20.qasm (20 qubits)
+Basis gate mode: ibmq
+Backend (topology): ../data/devices/ibmq_toronto.json (27 physical qubits)
+Limit mode: True
+STEP-1. Initial gate decomposition time: 0ms
+STEP-2. Routing and mapping time: 4ms
+STEP-3. Basis gate decomposition time: 0ms
+ total QASMTrans time: 5ms
+Basis gates in transpiled circuit: cx:275, rz:126, sx:56, x:61, 
+Saving to: ../build/output.qasm

@@ -1,6 +1,6 @@
 import sys
 from qiskit import Aer, QuantumCircuit, transpile, assemble
-from qiskit.test.mock import FakeToronto
+from qiskit.providers.fake_provider import FakeToronto
 
 def compare_counts(counts1, counts2, threshold=0.005):
     """Compare two count dictionaries. Consider them the same if the absolute difference
@@ -62,7 +62,7 @@ def main():
 
     # Get results for both circuits
     cmd_line_counts = run_circuit_from_qasm_file(sys.argv[1], backend)
-    build_output_counts = run_circuit_from_qasm_file2("/Users/huaf990/Library/CloudStorage/OneDrive-PNNL/Documents/sim_test/qasmtrans/build/output.qasm", backend)
+    build_output_counts = run_circuit_from_qasm_file2("../build/output.qasm", backend)
 
     # Compare the results
     if compare_counts(cmd_line_counts, build_output_counts):
