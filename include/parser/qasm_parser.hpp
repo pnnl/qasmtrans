@@ -28,7 +28,7 @@ private:
     map<string, creg> list_cregs;
     map<string, defined_gate> list_defined_gates;
     vector<qasm_gate> *list_gates = NULL;
-    vector<qasm_gate> *list_conditional_gates = NULL;
+    //vector<qasm_gate> *list_conditional_gates = NULL;
     vector<qasm_gate> list_buffered_measure;
     IdxType global_qubit_offset = 0;
     vector<token> cur_inst;
@@ -89,8 +89,9 @@ qasm_parser::qasm_parser(const char *filename)
     sr.add_replace("pi", "pi", token::e_pi);
     sr.add_replace("sin", "sin", token::e_func);
     sr.add_replace("cos", "cos", token::e_func);
+
     list_gates = new vector<qasm_gate>;
-    list_conditional_gates = new vector<qasm_gate>;
+    //list_conditional_gates = new vector<qasm_gate>;
     while (!qasmFile.eof())
     {
         load_instruction();
@@ -612,4 +613,5 @@ qasm_parser::~qasm_parser()
                 delete gate.conditional_inst;
         delete list_gates;
     }
+    //delete list_conditional_gates;
 }
