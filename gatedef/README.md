@@ -79,6 +79,9 @@ U(\alpha, \beta, \gamma) = \begin{bmatrix}
 ```
 
 
+
+
+
 ## 2-qubit Gates
 #### CX Gate
 The Controlled X gate, also known as CNOT, is used to apply an X gate to a target qubit when the control qubit is in the state |1⟩. This gate is essential for creating quantum entanglement and implementing conditional logic in quantum circuits.
@@ -188,6 +191,22 @@ CRZ = \begin{bmatrix}
 0 & 1 & 0 & 0 \\
 0 & 0 & \cos(\theta/2) - i\sin(\theta/2) & 0 \\
 0 & 0 & 0 & \cos(\theta/2) + i\sin(\theta/2)
+\end{bmatrix}
+```
+
+
+
+
+
+#### B Gate 
+The B gate is a two-qubit unitary operation that performs the diagonalization on a pair of quantum states and then measures in the computational basis, for performing [virtual distillation](https://arxiv.org/pdf/2011.07064.pdf).
+
+```math
+B = \begin{bmatrix}
+1 & 0 & 0 & 0 \\
+0 & \frac{\sqrt{2}}{2} & -\frac{\sqrt{2}}{2} & 0 \\
+0 & \frac{\sqrt{2}}{2} & \frac{\sqrt{2}}{2} & 0 \\
+0 & 0 & 0 & 1
 \end{bmatrix}
 ```
 
