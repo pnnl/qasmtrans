@@ -1,5 +1,5 @@
 # Quantum Gate Library
-This repository is to collect and define quantum gates that are meaningful to quantum algorithms, domain applications, devices, and operations. This will serve as a standard for the support of our software tools.
+This page is to collect and define quantum gates that are meaningful to quantum algorithms, domain applications, devices, and operations. This will serve as a standard gate set for qasmtrans and our other tools.
 
 ## 1-qubit Gates
 
