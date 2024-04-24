@@ -1,5 +1,5 @@
 # Quantum Gate Library
-This page is to collect and define quantum gates that are meaningful to quantum algorithms, domain applications, devices, and operations. This will serve as a standard gate set for qasmtrans and our other tools.
+This page is to collect and define quantum gates that are meaningful to quantum algorithms, domain applications, devices, and operations. This will serve as a standard gate set for qasmtrans and our other tools. Other definitions can be found in [Wiki](https://en.wikipedia.org/wiki/List_of_quantum_logic_gates).
 
 ## 1-qubit Gates
 
@@ -196,8 +196,6 @@ CRZ = \begin{bmatrix}
 
 
 
-
-
 #### B Gate 
 The B gate is a two-qubit unitary operation that performs the diagonalization on a pair of quantum states and then measures in the computational basis, for performing [virtual distillation](https://arxiv.org/pdf/2011.07064.pdf).
 
@@ -209,7 +207,17 @@ B = \begin{bmatrix}
 0 & 0 & 0 & 1
 \end{bmatrix}
 ```
+#### W Gate 
+The W gate, which is for QLA, can be found on page 34 of [paper](https://arxiv.org/pdf/1505.06552.pdf). It is defined as W(1,2)=CX(2,1)CX(1,2)CH(1,2)CX(1,2)CX(2,1).
 
+```math
+W = \begin{bmatrix}
+1 & 0 & 0 & 0 \\
+0 & \frac{\sqrt{2}}{2} & \frac{\sqrt{2}}{2} & 0 \\
+0 & \frac{\sqrt{2}}{2} & -\frac{\sqrt{2}}{2} & 0 \\
+0 & 0 & 0 & 1
+\end{bmatrix}
+```
 
 ## 3-qubit Gates
 
