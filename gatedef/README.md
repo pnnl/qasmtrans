@@ -77,6 +77,15 @@ U(\alpha, \beta, \gamma) = \begin{bmatrix}
 (\cos(\beta) + i\sin(\beta))\sin(\alpha/2) & (\cos(\beta+\gamma) + i\sin(\beta+\gamma))\cos(\alpha/2)
 \end{bmatrix}
 ```
+#### ID Gate 
+The ID gate leaves the state of a qubit unchanged. It is used to maintain the coherence of qubits that are not currently used or for padding in quantum circuits to align the timing of operations across different qubits. 
+```math
+ID = \begin{bmatrix} 1 & 0 \\ 0 & 1 \end{bmatrix}
+```
+Sometimes, the ID gate can take a timing parameter so that relaxation noise can be modeled.
+```math
+ID(t) = \begin{bmatrix} 1 & 0 \\ 0 & 1 \end{bmatrix}
+```
 
 
 
@@ -209,6 +218,49 @@ The Controlled U gate. This gate applies a unitary operation U($\alpha$, $\beta$
 CU = \begin{bmatrix} 1 & 0 & 0 & 0 \\ 0 & 1 & 0 & 0 \\ 0 & 0 & \cos(\alpha/2) & -(\cos(\gamma) + i\sin(\gamma))\sin(\alpha/2) \\ 0 & 0 & \cos(\beta) + i\sin(\beta))\sin(\alpha/2) & (\cos(\beta+\gamma) + i\sin(\beta+\gamma))\cos(\alpha/2) \end{bmatrix}
 ```
 
+#### RXX Gate
+The two-qubit rotation gate along XX-axis. It's similar to RX, but operates on two qubits simultaneously. 
+```math
+RXX(\theta) = \begin{bmatrix}
+\cos(\theta/2) & 0 & 0 & -i\sin(\theta/2) \\
+0 & \cos(\theta/2) & -i\sin(\theta/2) & 0 \\
+0 & -i\sin(\theta/2) & \cos(\theta/2) & 0 \\
+-i\sin(\theta/2) & 0 & 0 & \cos(\theta/2)
+\end{bmatrix}
+```
+
+#### RYY Gate
+The two-qubit rotation gate along YY-axis. It's similar to RY, but operates on two qubits simultaneously. 
+```math
+RYY(\theta) = \begin{bmatrix}
+\cos(\theta/2) & 0 & 0 & i\sin(\theta/2) \\
+0 & \cos(\theta/2) & -i\sin(\theta/2) & 0 \\
+0 & -i\sin(\theta/2) & \cos(\theta/2) & 0 \\
+i\sin(\theta/2) & 0 & 0 & \cos(\theta/2)
+\end{bmatrix}
+```
+#### RZZ Gate
+The two-qubit rotation gate along ZZ-axis. It's similar to RZ, but operates on two qubits simultaneously. 
+```math
+RZZ(\theta) = \begin{bmatrix}
+\cos(\theta/2) - i\sin(\theta/2) & 0 & 0 & 0 \\
+0 & \cos(\theta/2) + i\sin(\theta/2) & 0 & 0 \\
+0 & 0 & \cos(\theta/2) + i\sin(\theta/2) & 0 \\
+0 & 0 & 0 & \cos(\theta/2) - i\sin(\theta/2)
+\end{bmatrix}
+```
+
+#### SWAP Gate
+A two-qubit gate that exchanges the states of two qubits. It is a crucial gate for routing when two remote qubits try to perform operations.
+```math
+SWAP = \begin{bmatrix}
+1 & 0 & 0 & 0 \\
+0 & 0 & 1 & 0 \\
+0 & 1 & 0 & 0 \\
+0 & 0 & 0 & 1
+\end{bmatrix}
+```
+
 
 
 #### B Gate 
@@ -224,7 +276,6 @@ B = \begin{bmatrix}
 ```
 #### W Gate 
 The W gate, which is for QLA, can be found on page 34 of [paper](https://arxiv.org/pdf/1505.06552.pdf). It is defined as W(1,2)=CX(2,1)CX(1,2)CH(1,2)CX(1,2)CX(2,1).
-
 ```math
 W = \begin{bmatrix}
 1 & 0 & 0 & 0 \\
@@ -235,6 +286,37 @@ W = \begin{bmatrix}
 ```
 
 ## 3-qubit Gates
+
+#### CCX Gate 
+The Controled-Controlled NOT gate, or CCX, is also known as Toffoli gate. It performs a NOT operation on the third qubit (target) only when the first two qubits (controls) are both in |1⟩. CCX is key for realizing classical logical operations in a reversible manner. It is a universal gate.
+```math
+CCX = \begin{bmatrix}
+1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 \\
+0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 \\
+0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 \\
+0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 \\
+0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 \\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 \\
+0 & 0 & 0 & 0 & 0 & 0 & 1 & 0
+\end{bmatrix}
+```
+
+#### CSWAP Gate 
+The Controlled-SWAP gate, also known as the Fredkin gate, is to swap the second and third qubits if the first control qubit is in ∣1⟩. It is also a universal gate which is used in reversible computing and particularly in QRAM. 
+```math
+CSWAP = \begin{bmatrix}
+1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 \\
+0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 \\
+0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 \\
+0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 \\
+0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 \\
+0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 \\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 1
+\end{bmatrix}
+```
+
 
 
 
