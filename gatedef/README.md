@@ -284,7 +284,7 @@ RZZ(\theta) = \begin{bmatrix}
 0 & 0 & 0 & \cos(\theta/2) - i\sin(\theta/2)
 \end{bmatrix}
 ```
-Quantinuum devices use ZZ with certain degree as the two-qubit native entanglement gate.
+Quantinuum devices use RZZ(π/2) with a global phase of π/4, as the two-qubit native entanglement gate.
 ```math
 ZZ = \begin{bmatrix}
 1 & 0 & 0 & 0 \\
