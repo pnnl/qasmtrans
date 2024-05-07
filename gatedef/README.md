@@ -54,7 +54,7 @@ The RY gate performs a rotation around the Y axis by an angle $\theta$.
 RY(\theta)= \begin{bmatrix} \cos(\theta/2) & -\sin(\theta/2) \\ \sin(\theta/2) & \cos(\theta/2) \end{bmatrix}
 ```
 #### RZ Gate 
-The RZ gate performs a rotation around the Z axis by an angle $\theta$.
+The RZ gate performs a rotation around the Z axis by an angle $\theta$. IBMQ uses a virtual implementation of the RZ gate, see VZ gate.
 ```math
 RZ(\theta) = \begin{bmatrix} \cos(\theta/2) - i\sin(\theta/2) & 0 \\ 0 & \cos(\theta/2) + i\sin(\theta/2) \end{bmatrix}
 ```
@@ -80,18 +80,44 @@ U(\alpha, \beta, \gamma) = \begin{bmatrix}
 #### ID Gate 
 The ID gate leaves the state of a qubit unchanged. It is used to maintain the coherence of qubits that are not currently used or for padding in quantum circuits to align the timing of operations across different qubits. 
 ```math
-ID = \begin{bmatrix} 1 & 0 \\ 0 & 1 \end{bmatrix}
+\text{ID} = \begin{bmatrix} 1 & 0 \\ 0 & 1 \end{bmatrix}
 ```
 Sometimes, the ID gate can take a timing parameter so that relaxation noise can be modeled.
 ```math
-ID(t) = \begin{bmatrix} 1 & 0 \\ 0 & 1 \end{bmatrix}
+\text{ID}(t) = \begin{bmatrix} 1 & 0 \\ 0 & 1 \end{bmatrix}
+```
+#### GPI Gate
+The GPI gate performs a π or bit-flip rotation with an embedded phase. It always rotates π radians—hence the name—but can rotate on any longitudinal axis of the Bloch sphere. At a ϕ of 0 this is equivalent to an X gate, and at a ϕ of 0.25 turns (π/2 radians) it’s equivalent to a Y gate, but it can also be mapped to any other azimuthal angle. It is one of the one-qubit basis gates for IonQ devices. See their [doc](https://ionq.com/docs/getting-started-with-native-gates). It is physically implemented as a Rabi oscillation made with a two-photon Raman transition, i.e. driving the qubits on resonance using a pair of lasers in a Raman configuration. See [paper](https://www.nature.com/articles/s41467-019-13534-2).
+```math
+\text{GPI}(\phi) = \begin{bmatrix}
+\cos(\phi/2) - i\sin(\phi/2) & 0 \\
+0 & \cos(\phi/2) + i\sin(\phi/2)
+\end{bmatrix}
 ```
 
+#### GPI2 Gate
+The GPi2 gate could be considered an RX(π/2) — or RY(π/2) — with an embedded phase. It always rotates π/2 radians but can rotate on any longitudinal axis of the Bloch sphere. At a ϕ of π this is equivalent to RX(π/2), at a ϕ of 0.25 turns (π/2 radians) it’s equivalent to RY(π/2), but it can also be mapped to any other azimuthal angle. It is one of the one-qubit basis gates for IonQ devices. See their [doc](https://ionq.com/docs/getting-started-with-native-gates). It is physically implemented as a Rabi oscillation made with a two-photon Raman transition, i.e. driving the qubits on resonance using a pair of lasers in a Raman configuration. See [paper](https://www.nature.com/articles/s41467-019-13534-2).
+```math
+\text{GPI2}(\phi) = \begin{bmatrix}
+1 & -\sin(\phi)-i\cos(\phi) \\
+\sin(\phi)-i\cos(\phi) & 1
+\end{bmatrix}
+```
+#### VZ Gate
+IonQ does not expose or implement a Z gate, where it waits for the phase to advance in time, but a Virtual RZ can be performed by simply advancing or retarding the phase of the following operation in the circuit. This does not physically change the internal state of the trapped ion at the time of its implementation; it changes the phases of the future operations such that it is equivalent to an actual Z-rotation around the Bloch sphere. In effect, virtual RZ operations are implied by the phase inputs to later gates. See [doc](https://ionq.com/docs/getting-started-with-native-gates). IBMQ uses similar strategy for their RZ basis gate (known as Virtual Z gate or VZ gate) of the superconducting devices. See detail in [paper](https://arxiv.org/pdf/1612.00858).
+```math
+\text{VZ} = \begin{bmatrix}
+1 & -\sin(\phi)-i\cos(\phi) \\
+\sin(\phi)-i\cos(\phi) & 1
+\end{bmatrix}
+```
+
+ 
 
 
 ## 2-qubit Gates
 #### CX Gate
-The Controlled X gate, also known as CNOT, is used to apply an X gate to a target qubit when the control qubit is in the state |1⟩. This gate is essential for creating quantum entanglement and implementing conditional logic in quantum circuits.
+The Controlled X gate, also known as CNOT, is used to apply an X gate to a target qubit when the control qubit is in the state |1⟩. This gate is essential for creating quantum entanglement and implementing conditional logic in quantum circuits. It is one of the basis gates for IBMQ devices.
 ```math
 CX = \begin{bmatrix}
 1 & 0 & 0 & 0 \\
@@ -111,7 +137,7 @@ CY = \begin{bmatrix}
 \end{bmatrix}
 ```
 #### CZ Gate 
-The Controlled Z gate, applies a Z gate (Pauli-Z gate) to a target qubit when the control qubit is set to |1⟩. This gate is essential for phase manipulation in quantum algorithms and is widely used in creating quantum entanglement.
+The Controlled Z gate, applies a Z gate (Pauli-Z gate) to a target qubit when the control qubit is set to |1⟩. This gate is essential for phase manipulation in quantum algorithms and is widely used in creating quantum entanglement. It is one of the basis gates for latest IBMQ devices such as ibm_torino.
 ```math
 CZ = \begin{bmatrix}
 1 & 0 & 0 & 0 \\
@@ -218,8 +244,8 @@ The Controlled U gate. This gate applies a unitary operation U($\alpha$, $\beta$
 CU = \begin{bmatrix} 1 & 0 & 0 & 0 \\ 0 & 1 & 0 & 0 \\ 0 & 0 & \cos(\alpha/2) & -(\cos(\gamma) + i\sin(\gamma))\sin(\alpha/2) \\ 0 & 0 & \cos(\beta) + i\sin(\beta))\sin(\alpha/2) & (\cos(\beta+\gamma) + i\sin(\beta+\gamma))\cos(\alpha/2) \end{bmatrix}
 ```
 
-#### RXX Gate
-The two-qubit rotation gate along XX-axis. It's similar to RX, but operates on two qubits simultaneously. 
+#### XX Gate
+The two-qubit rotation gate along XX-axis, also known as RXX gate. It's similar to RX, but operates on two qubits simultaneously. 
 ```math
 RXX(\theta) = \begin{bmatrix}
 \cos(\theta/2) & 0 & 0 & -i\sin(\theta/2) \\
@@ -229,8 +255,8 @@ RXX(\theta) = \begin{bmatrix}
 \end{bmatrix}
 ```
 
-#### RYY Gate
-The two-qubit rotation gate along YY-axis. It's similar to RY, but operates on two qubits simultaneously. 
+#### YY Gate
+The two-qubit rotation gate along YY-axis, also known as RYY gate. It's similar to RY, but operates on two qubits simultaneously. 
 ```math
 RYY(\theta) = \begin{bmatrix}
 \cos(\theta/2) & 0 & 0 & i\sin(\theta/2) \\
@@ -239,8 +265,8 @@ RYY(\theta) = \begin{bmatrix}
 i\sin(\theta/2) & 0 & 0 & \cos(\theta/2)
 \end{bmatrix}
 ```
-#### RZZ Gate
-The two-qubit rotation gate along ZZ-axis. It's similar to RZ, but operates on two qubits simultaneously. 
+#### ZZ Gate
+The two-qubit rotation gate along ZZ-axis, also known as RZZ gate. It's similar to RZ, but operates on two qubits simultaneously. 
 ```math
 RZZ(\theta) = \begin{bmatrix}
 \cos(\theta/2) - i\sin(\theta/2) & 0 & 0 & 0 \\
@@ -362,7 +388,7 @@ CSWAP = \begin{bmatrix}
 #### RCCX Gate
 The RCCX gate, also known as the Relative Phase Toffoli or Margolus gate, is a simplified Toffoli gate. It implements the Toffoli gate up to relative phases. 
 ```math
-CSWAP = \begin{bmatrix}
+RCCX = \begin{bmatrix}
 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 \\
 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 \\
