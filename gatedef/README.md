@@ -77,6 +77,15 @@ U(\alpha, \beta, \gamma) = \begin{bmatrix}
 (\cos(\beta) + i\sin(\beta))\sin(\alpha/2) & (\cos(\beta+\gamma) + i\sin(\beta+\gamma))\cos(\alpha/2)
 \end{bmatrix}
 ```
+Quantinuum devices uses the U2 gates with two parameters $\theta$, $\psi, as one of the one-qubit basis gates. See [Quantinuum System Model H1 Product Data Sheet](https://assets.website-files.com/617730fbcf7b7c387194556a/62a8f7244596df4d854c2222_Quantinuum%20H1%20Product%20Data%20Sheet%20v5%2014JUN22.pdf).
+```math
+U_{1q}(\theta, \psi) = \begin{bmatrix}
+\cos(\theta/2) & -\sin(\theta/2)\sin(\psi)-i\sin(\theta/2)cos(\psi) \\
+\sin(\theta/2)\cos(\psi)-i\sin(\theta/2)\cos(\psi) & 0
+\end{bmatrix}
+```
+
+
 #### ID Gate 
 The ID gate leaves the state of a qubit unchanged. It is used to maintain the coherence of qubits that are not currently used or for padding in quantum circuits to align the timing of operations across different qubits. 
 ```math
@@ -244,8 +253,8 @@ The Controlled U gate. This gate applies a unitary operation U($\alpha$, $\beta$
 CU = \begin{bmatrix} 1 & 0 & 0 & 0 \\ 0 & 1 & 0 & 0 \\ 0 & 0 & \cos(\alpha/2) & -(\cos(\gamma) + i\sin(\gamma))\sin(\alpha/2) \\ 0 & 0 & \cos(\beta) + i\sin(\beta))\sin(\alpha/2) & (\cos(\beta+\gamma) + i\sin(\beta+\gamma))\cos(\alpha/2) \end{bmatrix}
 ```
 
-#### XX Gate
-The two-qubit rotation gate along XX-axis, also known as RXX gate. It's similar to RX, but operates on two qubits simultaneously. 
+#### RXX Gate
+The two-qubit rotation gate along XX-axis, also known as XX gate. It's similar to RX, but operates on two qubits simultaneously. 
 ```math
 RXX(\theta) = \begin{bmatrix}
 \cos(\theta/2) & 0 & 0 & -i\sin(\theta/2) \\
@@ -255,8 +264,8 @@ RXX(\theta) = \begin{bmatrix}
 \end{bmatrix}
 ```
 
-#### YY Gate
-The two-qubit rotation gate along YY-axis, also known as RYY gate. It's similar to RY, but operates on two qubits simultaneously. 
+#### RYY Gate
+The two-qubit rotation gate along YY-axis, also known as YY gate. It's similar to RY, but operates on two qubits simultaneously. 
 ```math
 RYY(\theta) = \begin{bmatrix}
 \cos(\theta/2) & 0 & 0 & i\sin(\theta/2) \\
@@ -265,8 +274,8 @@ RYY(\theta) = \begin{bmatrix}
 i\sin(\theta/2) & 0 & 0 & \cos(\theta/2)
 \end{bmatrix}
 ```
-#### ZZ Gate
-The two-qubit rotation gate along ZZ-axis, also known as RZZ gate. It's similar to RZ, but operates on two qubits simultaneously. 
+#### RZZ Gate
+The two-qubit rotation gate along ZZ-axis, also known as ZZ gate. It's similar to RZ, but operates on two qubits simultaneously. 
 ```math
 RZZ(\theta) = \begin{bmatrix}
 \cos(\theta/2) - i\sin(\theta/2) & 0 & 0 & 0 \\
@@ -275,6 +284,16 @@ RZZ(\theta) = \begin{bmatrix}
 0 & 0 & 0 & \cos(\theta/2) - i\sin(\theta/2)
 \end{bmatrix}
 ```
+Quantinuum devices use ZZ with certain degree as the two-qubit native entanglement gate.
+```math
+ZZ = \begin{bmatrix}
+1 & 0 & 0 & 0 \\
+0 & i & 0 & 0 \\
+0 & 0 & i & 0 \\
+0 & 0 & 0 & 1
+\end{bmatrix}
+```
+
 
 #### SWAP Gate
 A two-qubit gate that exchanges the states of two qubits. It is a crucial gate for routing when two remote qubits try to perform operations.
