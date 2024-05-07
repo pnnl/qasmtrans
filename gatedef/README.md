@@ -330,7 +330,6 @@ G(\theta) = \begin{bmatrix}
 \end{bmatrix}
 ```
 
-
 #### B Gate 
 The B gate is a two-qubit unitary operation that performs the diagonalization on a pair of quantum states and then measures in the computational basis, for performing [virtual distillation](https://arxiv.org/pdf/2011.07064.pdf).
 
@@ -352,6 +351,31 @@ W = \begin{bmatrix}
 0 & 0 & 0 & 1
 \end{bmatrix}
 ```
+
+
+
+#### MS Gate 
+The two-qubit Mølmer-Sørenson gate along with single-qubit gates constitutes a universal gate set. For IonQ devices, by irradiating any two ions in the chain with a predesigned set of pulses, they can couple the ions’ internal states with the chain’s normal modes of motion to create entanglement. The two-qubit MS gate is the native two-qubit basis gate of IonQ, see [doc](https://ionq.com/docs/getting-started-with-native-gates). 
+
+For fully entangling MS gate, which is an XX gate. It has two parameters. The first phase parameter refers to the first qubit’s phase as it acts on the second one, the second refers to the second qubit’s phase as it acts on the first one.
+```math
+\text{FMS}(\phi,\psi) = \begin{bmatrix}
+1 & 0 & 0 & -\sin(\phi+\psi)-i\cos(\phi+\psi) \\
+0 & 1 & -\sin(\phi-\psi)-i\cos(\phi-\psi) & 0 \\
+0 & \sin(\phi-\psi)-i\cos(\phi-\psi) & 1 & 0 \\
+\sin(\phi+\psi)-i\cos(\phi+\psi) & 0 & 0 & 1
+\end{bmatrix}
+```
+The partially entangling MS gate is useful in some cases. A third (optional) arbitrary angle θ is added.
+```math
+\text{PMS}(\phi,\psi,\theta) = \begin{bmatrix}
+\cos(\theta/2) & 0 & 0 & -\sin(\phi+\psi)\sin(\theta/2)-i\cos(\phi+\psi)\sin(\theta/2) \\
+0 & \cos(\theta/2) & -\sin(\phi-\psi)\sin(\theta/2)-i\cos(\phi-\psi)\sin(\theta/2) & 0 \\
+0 & \sin(\phi-\psi)\sin(\theta/2)-i\cos(\phi-\psi)\sin(\theta/2) & \cos(\theta/2) & 0 \\
+\sin(\phi+\psi)\sin(\theta/2)-i\cos(\phi+\psi)\sin(\theta/2) & 0 & 0 & \cos(\theta/2)
+\end{bmatrix}
+```
+
 
 ## 3-qubit Gates
 
