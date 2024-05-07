@@ -80,8 +80,6 @@ U(\alpha, \beta, \gamma) = \begin{bmatrix}
 
 
 
-
-
 ## 2-qubit Gates
 #### CX Gate
 The Controlled X gate, also known as CNOT, is used to apply an X gate to a target qubit when the control qubit is in the state |1⟩. This gate is essential for creating quantum entanglement and implementing conditional logic in quantum circuits.
@@ -192,6 +190,23 @@ CRZ = \begin{bmatrix}
 0 & 0 & \cos(\theta/2) - i\sin(\theta/2) & 0 \\
 0 & 0 & 0 & \cos(\theta/2) + i\sin(\theta/2)
 \end{bmatrix}
+```
+#### CSX Gate
+The Controlled sqrt(X) gate. This gate applies the square root of the Pauli-X operation (SX) when the control qubit is set to 1.
+```math
+CSX = \begin{bmatrix} 1 & 0 & 0 & 0 \\ 0 & 1 & 0 & 0 \\ 0 & 0 & \frac{1+i}{2} & \frac{1-i}{2} \\ 0 & 0 & \frac{1-i}{2} & \frac{1+i}{2} \end{bmatrix}
+````
+
+#### CP Gate
+The Controlled Phase gate. This gate applies a phase operation \( \cos(\theta) + i\sin(\theta) \) when the control qubit is set to 1.
+```math
+CP = \begin{bmatrix} 1 & 0 & 0 & 0 \\ 0 & 1 & 0 & 0 \\ 0 & 0 & 1 & 0 \\ 0 & 0 & 0 & \cos(\theta) + i\sin(\theta) \end{bmatrix}
+````
+
+#### CU Gate
+The Controlled U gate. This gate applies a unitary operation U($\alpha$, $\beta$, and $\gamma$) when the control qubit is set to 1. The parameters $\alpha$, $\beta$, and $\gamma$ define specific rotations or transformations within the unitary operation.
+```math
+CU = \begin{bmatrix} 1 & 0 & 0 & 0 \\ 0 & 1 & 0 & 0 \\ 0 & 0 & \cos(\alpha/2) & -(\cos(\gamma) + i\sin(\gamma))\sin(\alpha/2) \\ 0 & 0 & \cos(\beta) + i\sin(\beta))\sin(\alpha/2) & (\cos(\beta+\gamma) + i\sin(\beta+\gamma))\cos(\alpha/2) \end{bmatrix}
 ```
 
 
