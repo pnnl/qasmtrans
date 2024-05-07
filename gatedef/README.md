@@ -299,8 +299,8 @@ The two-qubit XY rotation gates can be thought of as a coherent rotation by some
 ```math
 XY(\beta,\theta) = \begin{bmatrix}
 1 & 0 & 0 & 0 \\
-0 & i & 0 & 0 \\
-0 & 0 & i & 0 \\
+0 & \cos(\theta/2) & i \sin(\theta/2) (\cos(\beta) + i \sin(\beta)) & 0 \\
+0 & i \sin(\theta/2) (\cos(\beta) - i \sin(\beta)) & \cos(\theta/2) & 0 \\
 0 & 0 & 0 & 1
 \end{bmatrix}
 ```
