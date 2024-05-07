@@ -294,6 +294,16 @@ ZZ = \begin{bmatrix}
 \end{bmatrix}
 ```
 
+#### XY Gate
+The two-qubit XY rotation gates can be thought of as a coherent rotation by some angle between the |01〉and |10〉states. This is a basis gate for Rigetti superconducting devices. See [doc](https://arxiv.org/pdf/1912.04424).
+```math
+XY(\beta,\theta) = \begin{bmatrix}
+1 & 0 & 0 & 0 \\
+0 & i & 0 & 0 \\
+0 & 0 & i & 0 \\
+0 & 0 & 0 & 1
+\end{bmatrix}
+```
 
 #### SWAP Gate
 A two-qubit gate that exchanges the states of two qubits. It is a crucial gate for routing when two remote qubits try to perform operations.
