@@ -261,6 +261,48 @@ SWAP = \begin{bmatrix}
 \end{bmatrix}
 ```
 
+#### iSWAP Gate
+A two-qubit gate that exchanges the states of two qubits and introduces a phase of i (the imaginary unit) to the swapped states. The gate is useful when phase relationships are critical, such as in QFT.
+```math
+iSWAP = \begin{bmatrix}
+1 & 0 & 0 & 0 \\
+0 & 0 & i & 0 \\
+0 & i & 0 & 0 \\
+0 & 0 & 0 & 1
+\end{bmatrix}
+```
+#### siSWAP Gate
+The square root of the iSWAP gate. It performs half of the operation of the iSWAP gate. It's useful when intermediate entanglement levels are needed. It swaps the amplitudes of two qubits but introduces a phase of π/4 rather than π/2 which is for the full iSWAP gate.
+```math
+siSWAP = \sqrt{\text{iSWAP}} = \begin{bmatrix}
+1 & 0 & 0 & 0 \\
+0 & \frac{1}{\sqrt{2}} & \frac{i}{\sqrt{2}} & 0 \\
+0 & \frac{i}{\sqrt{2}} & \frac{1}{\sqrt{2}} & 0 \\
+0 & 0 & 0 & 1
+\end{bmatrix}
+```
+
+#### ECR Gate
+The Echoed Cross-Resonance (ECR) gate is one of the two-qubit basis gates for IBMQ and is particularly used in superconducting systems. It is derived from the cross-resonance (CR) gate, where an additional echo pulse is used to mitigate unwanted interactions and errors. See [Qiskit Doc](https://docs.quantum.ibm.com/api/qiskit/qiskit.circuit.library.ECRGate).
+```math
+ECR  = \frac{1}{\sqrt{2}}\begin{bmatrix}
+0 & 1 & 0 & i \\
+0 & 0 & i & 1 \\
+1 & -i & 0 & 0 \\
+-i & 1 & 0 & 0
+\end{bmatrix}
+```
+
+#### G Gate
+The Givens Rotation gate, also known as Givens gate or G gate, is used to perform rotations in a two-dimensional subspace. A Givens gate is useful for state preparation and manipulation for quantum chemistry.
+```math
+G(\theta) = \begin{bmatrix}
+1 & 0 & 0 & 0 \\
+0 & \cos(\theta) & -\sin(\theta) & 0 \\
+0 & \sin(\theta) & \cos(\theta) & 0 \\
+0 & 0 & 0 & 1
+\end{bmatrix}
+```
 
 
 #### B Gate 
@@ -317,6 +359,20 @@ CSWAP = \begin{bmatrix}
 \end{bmatrix}
 ```
 
+#### RCCX Gate
+The RCCX gate, also known as the Relative Phase Toffoli or Margolus gate, is a simplified Toffoli gate. It implements the Toffoli gate up to relative phases. 
+```math
+CSWAP = \begin{bmatrix}
+1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 \\
+0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 \\
+0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 \\
+0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 \\
+0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 \\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 \\
+0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 
+\end{bmatrix}
+```
 
 
 
