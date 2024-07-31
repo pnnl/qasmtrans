@@ -86,16 +86,25 @@ void dumpQASM(std::shared_ptr<QASMTrans::Circuit> circuit, const char *filename,
         {
             if (std::strcmp(QASMTrans::OP_NAMES[g.op_name], "MA") != 0)
             {
-                qasm_file << toLowerCase(g.gateToString()) << "; \n";
-                // add gate name and count to map
-                std::string gate_name = toLowerCase(QASMTrans::OP_NAMES[g.op_name]);
-                if (basis_gate_counts.find(gate_name) == basis_gate_counts.end())
+                if (g.gateToString() != "")
                 {
-                    basis_gate_counts.insert(std::make_pair(gate_name, 1));
-                }
-                else
-                {
-                    basis_gate_counts[gate_name] += 1;
+                    qasm_file << toLowerCase(g.gateToString()) << "; \n";
+                    std::string str_out = toLowerCase(g.gateToString());
+                    std::string err_string = "rz q[1]";
+                    if (str_out.find(err_string) != std::string::npos)
+                    {
+                        cout << "ERROR: " << g.op_name << endl;
+                    }
+                    // add gate name and count to map
+                    std::string gate_name = toLowerCase(QASMTrans::OP_NAMES[g.op_name]);
+                    if (basis_gate_counts.find(gate_name) == basis_gate_counts.end())
+                    {
+                        basis_gate_counts.insert(std::make_pair(gate_name, 1));
+                    }
+                    else
+                    {
+                        basis_gate_counts[gate_name] += 1;
+                    }
                 }
             }
         }

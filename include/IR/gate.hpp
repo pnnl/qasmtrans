@@ -241,6 +241,9 @@ namespace QASMTrans
         C3SQRTX,
     };
 
+    // need more
+    static const std::set<OP> varGates = {RX, RY, RZ, RI, U, CU};
+
     // Name of the gate for tracing purpose
     const char *const OP_NAMES[] = {
         // Basic
@@ -372,7 +375,15 @@ namespace QASMTrans
             }
             else
             {
-                ss << " ";
+                if (varGates.find(op_name) != varGates.end())
+                {
+                    // this means the variable gate with all-zero angle. It is an identity gate
+                    return "";
+                }
+                else
+                {
+                    ss << " ";
+                }
             }
             if (ctrl >= 0)
             {
