@@ -32,8 +32,9 @@ void transpiler(shared_ptr<Circuit> circuit, shared_ptr<Chip> chip, map<string, 
 
     if (n_qubits > chip_n_qubit)
     {
-        std::cerr<<"Chip qubit number is smaller than the circuit."<<endl;
-        std::cerr<<"No transpilation has been performed."<<endl;
+        //std::cerr<<"Chip qubit number is smaller than the circuit."<<endl;
+        //std::cerr<<"No transpilation has been performed."<<endl;
+        throw std::logic_error{"Chip qubit number is smaller than the circuit. No transpilation has been performed."};
         std::exit(1);
     }
 
