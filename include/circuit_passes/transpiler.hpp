@@ -27,6 +27,16 @@ using namespace std;
 void transpiler(shared_ptr<Circuit> circuit, shared_ptr<Chip> chip, map<string, creg> list_cregs, IdxType debug_level, IdxType mode)
 {
     circuit->set_creg(list_cregs);
+    IdxType n_qubits = IdxType(circuit->num_qubits());
+    IdxType chip_n_qubit = chip->chip_qubit_num;
+
+    if (n_qubits > chip_n_qubit)
+    {
+        //std::cerr<<"Chip qubit number is smaller than the circuit."<<endl;
+        //std::cerr<<"No transpilation has been performed."<<endl;
+        throw std::logic_error{"Chip qubit number is smaller than the circuit. No transpilation has been performed."};
+        std::exit(1);
+    }
 
     //======================================== STEP-1: Initial Gate Decomposition =====================================
     cpu_timer initial_decompose_timer;
