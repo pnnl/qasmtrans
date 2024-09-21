@@ -1,5 +1,6 @@
 # Quantum Gate Library
 This page is to collect and define quantum gates that are meaningful to quantum algorithms, domain applications, devices, and operations. This will serve as a standard gate set for qasmtrans and our other tools. Other definitions can be found in [Wiki](https://en.wikipedia.org/wiki/List_of_quantum_logic_gates).
+One can also find some standard gate defintion [here](https://threeplusone.com/pubs/on_gates.pdf).
 
 ## 1-qubit Gates
 
