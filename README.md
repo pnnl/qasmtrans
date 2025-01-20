@@ -107,8 +107,9 @@ QASMTrans includes two external source header files:
 - [json.hpp](https://github.com/nlohmann/json): a C++ json operation library.
 
 ## Developers:
-- Fei Hua, Pacific Northwest National Laboratory (Main developer)
+- Fei Hua, Pacific Northwest National Laboratory 
 - Meng Wang, Pacific Northwest National Laboratory
+- Muqing Zheng, Pacific Northwest National Laboratory
 - Ang Li, Pacific Northwest National Laboratory
 
 Thanks to Gushu Li (University of Pennsylvania) for sharing the Python source code of Sabre[2]).
