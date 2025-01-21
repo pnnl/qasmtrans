@@ -1,5 +1,5 @@
 # Specify the minimum version for CMake
-cmake_minimum_required(VERSION 3.8)
+cmake_minimum_required(VERSION 3.10)
 
 # Setup cc/CC
 if(DEFINED ENV{cc} AND DEFINED ENV{CC})

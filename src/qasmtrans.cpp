@@ -21,10 +21,13 @@ void print_help()
     std::cout << "-i                Input qasm circuit file" << std::endl;
     std::cout << "-c <backend>      Path to backend configuration json file" << std::endl;
     std::cout << "-limited          Run the transpiler with limited physical qubits usage" << std::endl;
-    std::cout << "-backend_list     Print the available backends" << std::endl;
-    std::cout << "-m <name>         Set the transpiler desired machine, default is Qiskit" << std::endl;
+    std::cout << "-limited          Limit qubit usage to circuit than device. "
+        << "It reduces qubit usage but may introduce extra routing cost or unable to route" << std::endl;
+    std::cout << "-backend_list     Print the available device backends" << std::endl;
+    std::cout << "-m <name>         Set the transpiler targeted device, default is ibmq" << std::endl;
     std::cout << "-v <0/1/2>        Set the output level, default is 0" << std::endl;
-    std::cout << "-o <path>         Set the output file, default is data/output_qasm_file/transpiled_modename_filename.qasm" << std::endl;
+    std::cout << "-o <path>         Set the output file, "
+        << "default is data/output/transpiled_modename_filename.qasm" << std::endl;
     std::cout << "-h                print the help function" << std::endl;
 }
 
@@ -34,7 +37,7 @@ int main(int argc, char **argv)
     IdxType mode = 0;
     std::string mode_name = "ibmq";
     IdxType debug_level = 0;
-    std::string output_path = "../data/output_qasm_file/";
+    std::string output_path = "../data/output/";
     std::map<std::string, IdxType> machineQubits = {
         {"ibmq_toronto", 27},
         {"ibmq_jakarta", 7},
@@ -159,7 +162,7 @@ int main(int argc, char **argv)
                        debug_level, mode);
             //================= Write out ==================
             dumpQASM(circuit, filename, output_path, debug_level, mode);
-            cout << "Saving to: " << output_path << endl;
+            cout << "Saving output qasm to: " << output_path << endl;
             return 0;
         }
     }
