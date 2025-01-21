@@ -1,6 +1,7 @@
 import sys
-from qiskit import Aer, QuantumCircuit, transpile, assemble
-from qiskit.providers.fake_provider import FakeToronto
+from qiskit import QuantumCircuit, transpile, assemble
+from qiskit_aer import Aer
+from qiskit.providers.fake_provider import Fake27QPulseV1
 
 def compare_counts(counts1, counts2, threshold=0.005):
     """Compare two count dictionaries. Consider them the same if the absolute difference
@@ -57,8 +58,8 @@ def main():
         print("Usage: python script_name.py <path_to_qasm_file>")
         sys.exit(1)
 
-    # Use FakeToronto backend for transpilation
-    backend = FakeToronto()
+    # Use Fake27QPulseV1 backend for transpilation
+    backend = Fake27QPulseV1()
 
     # Get results for both circuits
     cmd_line_counts = run_circuit_from_qasm_file(sys.argv[1], backend)
