@@ -51,7 +51,7 @@ QASMTrans command-line options:
 - `-m`: Set the mode that determines the specific basis gate set for a vendor:
   - `ibmq`: The basis gates for IBMQ here is [rz,sx,x,cx] (default)
   - `ionq`:  The basis gates for IonQ here is [rx(gpi),ry(gpi2),rz(gz),rxx(ms)] 
-  - `quantinuum`: The basis gates for Quantinuum here is [U(&#03b8;,&#03d5;),rz,zz]
+  - `quantinuum`: The basis gates for Quantinuum here is [rx,rz,zz]
   - `rigetti`: The basis gates for Rigetti here is [rx,ry,cz] 
   - `quafu`: The basis gates for Quafu here is [cz,rx,ry,rz,h]
 
