@@ -29,15 +29,14 @@ To run the transpiler, use the command below:
 ./qasmtrans -i ../data/test_benchmark/bv10.qasm -m ibmq -c ../data/devices/ibmq_toronto.json -v 1
 ```
 
-## Correctness verification
-We also test our QASMTrans correctness, we use the same simulator from qiskit to test our transpiled qasm file and qiskit own transpiled file, we pass the file when the differences is less than 0.5%, to run the test simply run the command below:
-
+## Testing
+The correctness testing is through the comparision of the Qiskit-Aer simulation results from QASMTrans generated circuits, and Qiskit generated circuits for the list of input circuits. The test is passed with differences less than 0.5%. 
 ```bash
 cd test
 sh validation_test.sh
 ```
 
-All the detailed result will be stored in compare_summary
+The detailed result will be stored in compare_summary.txt.
 ## Options
 QASMTrans command-line options:
 
@@ -50,10 +49,11 @@ QASMTrans command-line options:
 - `-q`: Take a qasm circuit string as input (Future support)
 
 - `-m`: Set the mode that determines the specific basis gate set for a vendor:
-  - `ibmq` : The basis gates for IBMQ here is [rz,sx,x,cx] (default)
+  - `ibmq`: The basis gates for IBMQ here is [rz,sx,x,cx] (default)
   - `ionq`:  The basis gates for IonQ here is [rx(gpi),ry(gpi2),rz(gz),rxx(ms)] 
-  - `quantinuum` : The basis gates for Quantinuum here is [U(&#03b8;,&#03d5;),rz,zz]
-  - `rigetti` : The basis gates for Rigetti here is [rx,ry,cz] 
+  - `quantinuum`: The basis gates for Quantinuum here is [U(&#03b8;,&#03d5;),rz,zz]
+  - `rigetti`: The basis gates for Rigetti here is [rx,ry,cz] 
+  - `quafu`: The basis gates for Quafu here is [cz,rx,ry,rz,h]
 
 - `-c`: Specify the backend device with certain topology. The path is "data/devices/"
 
