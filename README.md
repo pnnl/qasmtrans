@@ -1,21 +1,26 @@
 # QASMTrans
-QASMTrans is a quantum transpiler for effectively parsing and translating general OpenQASM[1] circuits to
-circuits compiled for a particular NISQ device (e.g., from IBMQ, Rigetti, IonQ, Quantinuum), addressing
-the contraints of basis gates and qubit topology. QASMTrans is purely developed in C++ without external
-library dependency, facilitate deployment across platforms. It is specially designed for emerging deep
-circuits, such as those from HHL, QPE, quantum simulation, etc. QASMTrans is easy to extend for adding 
-new optimization passes and backend devices (see [extension](passes/README.md)). For some examplar 
-QASM circuits, please check our [QASMBench](https://github.com/pnnl/qasmbench).
+QASMTrans is a C++ quantum transpiler for OpenQASM[1] circuits targeting NISQ devices (IBMQ, Rigetti, IonQ, Quantinuum). It handles basis gates and device topology, and is designed for deeper circuits (HHL, QPE, simulation). It is extensible for new passes and backends (see [extension](passes/README.md)). Example circuits: [QASMBench](https://github.com/pnnl/qasmbench).
 
-Please check our paper for details and performance: https://arxiv.org/pdf/2308.07581.pdf
-
+Paper: https://arxiv.org/pdf/2308.07581.pdf
 
 ## Installation
-To install the software, follow the steps below:
-
+Clone the repository:
 ```bash
 git clone https://github.com/pnnl/qasmtrans.git
 cd qasmtrans
+```
+
+Ensure Python 3.8 is available. Create and activate a venv:
+
+```bash
+python3.8 -m venv venv
+
+source venv/bin/activate
+
+pip install -r requirements.txt
+```
+Build the project:
+```bash
 mkdir build
 cd build
 cmake ..
@@ -23,39 +28,97 @@ make
 ```
 
 ## Execution
-To run the transpiler, use the command below:
+Run the transpiler:
 
 ```bash
 ./qasmtrans -i ../data/test_benchmark/bv10.qasm -m ibmq -c ../data/devices/ibmq_toronto.json -v 1
 ```
 
+### Python bindings
+The repository includes a pybind11 module (`qasmtrans_core`) and helper scripts under `python/`. To build/install it:
+
+1. Activate the venv (once per shell):
+   ```bash
+   source venv/bin/activate
+   ```
+2. Install build dependencies (includes pybind11, scikit-build-core, cmake):
+   ```bash
+   pip install -r requirements.txt
+   ```
+3. Build the extension with CMake (module is written to `python/`):
+   ```bash
+   cmake -S . -B build
+   cmake --build build --target qasmtrans_core
+   ```
+   Or install into your environment:
+   ```bash
+   pip install .
+   ```
+
+### Recommended Python environment (py38)
+These requirements are pinned for Python 3.8 to keep builds reproducible on constrained systems.
+
+```bash
+python3.8 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+pip install .
+```
+
 ## Testing
-The correctness testing is through the comparision of the Qiskit-Aer simulation results from QASMTrans generated circuits, and Qiskit generated circuits for the list of input circuits. The test is passed with differences less than 0.5%. 
+Validation compares QASMTrans vs Qiskit-Aer outputs for the test circuits. The test passes when differences are below 0.5%.
 ```bash
 cd test
 sh validation_test.sh
 ```
 
-The detailed result will be stored in compare_summary.txt.
+Results are stored in compare_summary.txt.
 ## Options
 QASMTrans command-line options:
 
-- `-i`: Input qasm file, e.g.  `data/test_benchmark/bv10.qasm`    
+- `-i <path>`: Input QASM file (repeat `-i` for multiple circuits).
 
-- `-o`: Specify the output file location, the default path is `data/output_qasm_file/{circuit}_{mode}.qasm`.
+- `-o <path>`: Specify the output QASM path. Default is `data/output/transpiled_modename_filename.qasm`.
 
-- `-b`: Sepcify basis gate set {x, y, z} (Future support) 
+- `-c <path>`: Specify the backend device config JSON (see `data/devices/`).
 
-- `-q`: Take a qasm circuit string as input (Future support)
-
-- `-m`: Set the mode that determines the specific basis gate set for a vendor:
+- `-m <name>`: Set the mode that determines the specific basis gate set for a vendor:
   - `ibmq`: The basis gates for IBMQ here is [rz,sx,x,cx] (default)
   - `ionq`:  The basis gates for IonQ here is [rx(gpi),ry(gpi2),rz(gz),rxx(ms)] 
   - `quantinuum`: The basis gates for Quantinuum here is [rx,rz,zz]
   - `rigetti`: The basis gates for Rigetti here is [rx,ry,cz] 
   - `quafu`: The basis gates for Quafu here is [cz,rx,ry,rz,h]
+  - `iqm`: The basis gates for IQM are derived from the backend config
 
-- `-c`: Specify the backend device with certain topology. The path is "data/devices/"
+- `-backend_list`: Print the available backend names.
+
+- `-limited`: Limit the number of qubits used (i.e., avoid using all physical qubits of the device). Due to more limited topology, more gates can be introduced. This option is
+particularly useful for numerical simulation on a classical system, given less qubits.
+
+- `-v <0/1/2>`: Set the verbose level for debugging:
+  - 0 : No output (default)
+  - 1 : Output device_name, gate_ops, output file location
+  - 2 : Detailed information, including per-step routing/mapping logs
+
+- `-full_fidelity`: Score Mapomatic candidates on the entire circuit instead of its critical path.
+
+- `-cp_mode <product|hybrid>`: Choose Mapomatic scoring strategy (default product).
+
+- `-mapomatic_limit <N>`: Limit the number of candidate embeddings Mapomatic evaluates (default 1000).
+
+- `--disable_mapomatic`: Skip the calibration-aware Mapomatic pass.
+
+- `--merge-allow-params`: Include parameterized logical gates as merge candidates (default).
+
+- `--merge-disallow-params`: Exclude parameterized logical gates from merge candidate analysis.
+
+- `--optimize-1q`: Enable simple single-qubit consolidation pass.
+
+- `-p <path>`: Pulse template json (optional; enables pulse dumping).
+
+- `-h`: Print the help function.
+
+Backend device configs in `data/devices/`:
 
     IBMQ Machines (Heavy-hexagon):
     
@@ -79,15 +142,6 @@ QASMTrans command-line options:
     - `dummy_ibmq15 (15 qubits)`
     - `dummy_ibmq16 (16 qubits)`
     - `dummy_ibmq30 (30 qubits)` 
-
-- `-limited`: Limit the number of qubits used (i.e., avoid using all physical qubits of the device). Due to more limited topology, more gates can be introduced. This option is
-particularly useful for numerical simulation on a classical system, given less qubits.
-
-- `-v`: Set the verbose level for debugging:
-  - 0 : No output (default)
-  - 1 : Output device_name, gate_ops, transpilation time, output file location
-  - 2 : Detailed information, including initial_mapping, transpilation time for different steps during the routing/mapping pass
-
 ## Data Structure
 The central data structure are:
 
@@ -138,6 +192,10 @@ Bibtex:
 ## Acknowledgments
 PNNL IPID: 32821-E, IR: PNNL-SA-188499, Export Control: EAR99, Software DOI: 10.11578/dc.20230814.4
 
-The develoopment of this software is currently supported by the U.S. Department of Energy, Office of Science, National Quantum Information Science Research Centers, Quantum Science Center (QSC). Part of the original development was also supported by the U.S. Department of Energy, Office of Science, National Quantum Information Science Research Centers, Co-design Center for Quantum Advantage (C2QA) under contract number DE-SC0012704. This research used resources of the Oak Ridge Leadership Computing Facility, which is a DOE Office of Science User Facility supported under Contract DE-AC05-00OR22725. This research used resources of the National Energy Research Scientific Computing Center (NERSC), a U.S. Department of Energy Office of Science User Facility located at Lawrence Berkeley National Laboratory, operated under Contract No. DE-AC02-05CH11231. The Pacific Northwest National Laboratory is operated by Battelle for the U.S. Department of Energy under Contract DE-AC05-76RL01830.
-
-
+This software is supported by the U.S. Department of Energy, Office of Science, National Quantum Information Science Research Centers,
+Co-design Center for Quantum Advantage (C2QA) under contract number DE-SC0012704. The software is also supported by the U.S. 
+Department of Energy, Office of Science, National Quantum Information Science Research Centers, Quantum Science Center (QSC). This research used
+resources of the Oak Ridge Leadership Computing Facility, which is a DOE Office of Science User Facility supported under Contract 
+DE-AC05-00OR22725. This research used resources of the National Energy Research Scientific Computing Center (NERSC), a U.S. Department of Energy 
+Office of Science User Facility located at Lawrence Berkeley National Laboratory, operated under Contract No. DE-AC02-05CH11231. The Pacific 
+Northwest National Laboratory is operated by Battelle for the U.S. Department of Energy under Contract DE-AC05-76RL01830.

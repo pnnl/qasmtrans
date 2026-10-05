@@ -24,6 +24,18 @@
 *.swo
 *.swn
 *~
+.ipynb_checkpoints/
+*.png
+*.pdf
+scripts/tmp/
+.mplconfig/
+data/devices/rigetti_ankaa*
+!data/devices/rigetti_ankaa4q_ideal_device.json
+!data/devices/rigetti_ankaa4q_ideal_pulses.json
+!data/devices/rigetti_ankaa9q3_device.json
+!data/devices/rigetti_ankaa9q3_pulses.json
+test/benchmarking/*.csv
+test/benchmarking/logs/
 
 # CMake generated directories and files
 CMakeCache.txt
@@ -31,20 +43,51 @@ CMakeFiles/
 cmake_install.cmake
 Makefile
 install_manifest.txt
+data/output_demo*
+data/output_demo_pulses*
+data/output_qasm_file/
+
+# Benchmark-generated artifacts
+data/benchmarking/compilation/results/
+data/benchmarking/compilation/outputs/
+data/benchmarking/mapomatic/results/
+data/benchmarking/mapomatic/outputs/
+data/benchmarking/space_sharing/results/
+data/benchmarking/space_sharing/outputs/
+data/benchmarking/qubit_adapt/generated/
+data/benchmarking/qubit_adapt/transpiled*/
+data/benchmarking/qubit_adapt/results/
+data/benchmarking/qubit_adapt/plots/
+
 
 # Directories generated during build
 build/
+build-llvm/
 build-debug/
 Debug/
 Release/
 x64/
 x86/
 *.dir/
+docs/
+
+# Output files
+data/output/
 
 # Other
 .DS_Store
 .vscode/
 *.log
+.python-version
+venv/
+.venv*/
+
+# Local scratch / runtime artifacts
+/tmp/
+/tmp_weight4_decay_compare*/
+
+# Python
+__pycache__/
 
 # Depending on the IDE/Editor you are using, you may want to ignore its config files too
 # For example, if using Visual Studio:
@@ -54,4 +97,3 @@ x86/
 # *.user
 # *.suo
 # *.userprefs
-

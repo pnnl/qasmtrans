@@ -6,6 +6,7 @@
 #include <memory>
 #include <cmath>
 #include <map>
+#include <algorithm>
 
 #include "../QASMTransPrimitives.hpp"
 #include "../parser/parser_util.hpp"
@@ -20,13 +21,18 @@ namespace QASMTrans
     private:
         // number of qubits
         IdxType n_qubits;
+        std::vector<IdxType> critical_path_gate_indices;
+        double critical_path_latency;
+        IdxType routing_swap_count = 0;
+        std::vector<IdxType> routed_initial_mapping;
 
     public:
         // user input gate sequence
         std::shared_ptr<std::vector<Gate>> gates;
         map<string, creg> list_cregs;
         std::vector<IdxType> initial_mapping;
-        Circuit(IdxType _n_qubits) : n_qubits(_n_qubits)
+
+        Circuit(IdxType _n_qubits) : n_qubits(_n_qubits), critical_path_latency(0.0)
         {
             // Implementation of constructor
             gates = std::make_shared<std::vector<Gate>>();
@@ -40,10 +46,34 @@ namespace QASMTrans
         {
             return *gates;
         }
-        void set_gates(std::vector<Gate> new_gates)
+        const std::vector<Gate> &gate_list() const
         {
+            return *gates;
+        }
+        void set_gates(const std::vector<Gate> &new_gates)
+        {
+            clear_critical_path();
             gates = std::make_shared<std::vector<Gate>>(new_gates);
             // auto-update number of qubits based on maximum gate index encountered
+            IdxType max_q = -1;
+            for (const auto &g : *gates)
+            {
+                if (g.qubit >= 0)
+                    max_q = std::max(max_q, g.qubit);
+                if (g.ctrl >= 0)
+                    max_q = std::max(max_q, g.ctrl);
+                if (g.extra >= 0)
+                    max_q = std::max(max_q, g.extra);
+            }
+            if (max_q + 1 > n_qubits)
+            {
+                n_qubits = max_q + 1;
+            }
+        }
+        void set_gates(std::vector<Gate> &&new_gates)
+        {
+            clear_critical_path();
+            gates = std::make_shared<std::vector<Gate>>(std::move(new_gates));
             IdxType max_q = -1;
             for (const auto &g : *gates)
             {
@@ -63,17 +93,33 @@ namespace QASMTrans
         {
             this->list_cregs = list_cregs;
         }
-        void set_mapping(std::vector<IdxType> initial_mapping)
+        void set_mapping(const std::vector<IdxType> &initial_mapping)
         {
-            this->initial_mapping.clear();
-            for (auto ini : initial_mapping)
-            {
-                this->initial_mapping.push_back(ini);
-            }
+            this->initial_mapping = initial_mapping;
+        }
+        void set_mapping(std::vector<IdxType> &&initial_mapping)
+        {
+            this->initial_mapping = std::move(initial_mapping);
         }
         std::vector<IdxType> get_mapping()
         {
             return this->initial_mapping;
+        }
+        const std::vector<IdxType> &mapping_view() const
+        {
+            return this->initial_mapping;
+        }
+        void set_routed_initial_mapping(const std::vector<IdxType> &mapping)
+        {
+            routed_initial_mapping = mapping;
+        }
+        void set_routed_initial_mapping(std::vector<IdxType> &&mapping)
+        {
+            routed_initial_mapping = std::move(mapping);
+        }
+        const std::vector<IdxType> &routed_initial_mapping_view() const
+        {
+            return routed_initial_mapping;
         }
         map<string, creg> get_cregs()
         {
@@ -84,6 +130,8 @@ namespace QASMTrans
             // Implementation of clear function
             gates->clear();
             // n_qubits = 0;
+            clear_critical_path();
+            routing_swap_count = 0;
         }
         void reset()
         {
@@ -97,6 +145,32 @@ namespace QASMTrans
             for (auto gate : *gates)
                 ss << gate.gateToString() << std::endl;
             return ss.str();
+        }
+        void set_critical_path(const std::vector<IdxType> &gate_indices, double total_latency)
+        {
+            critical_path_gate_indices = gate_indices;
+            critical_path_latency = total_latency;
+        }
+        std::vector<IdxType> get_critical_path() const
+        {
+            return critical_path_gate_indices;
+        }
+        double get_critical_path_latency() const
+        {
+            return critical_path_latency;
+        }
+        void clear_critical_path()
+        {
+            critical_path_gate_indices.clear();
+            critical_path_latency = 0.0;
+        }
+        void set_routing_swap_count(IdxType count)
+        {
+            routing_swap_count = count;
+        }
+        IdxType get_routing_swap_count() const
+        {
+            return routing_swap_count;
         }
         // ===================== Standard Gates =========================
         void X(IdxType qubit)
@@ -188,6 +262,12 @@ namespace QASMTrans
                      [-i*sin(a/2) cos(a/2)]
             */
             Gate G(OP::RX, qubit, -1, -1, 1, theta);
+            gates->push_back(G);
+        }
+        void PRX(ValType theta, ValType phi, IdxType qubit)
+        {
+            // Phased rotation around X: RZ(phi) RX(theta) RZ(-phi)
+            Gate G(OP::PRX, qubit, -1, -1, 1, theta, phi);
             gates->push_back(G);
         }
         void RY(ValType theta, IdxType qubit)
@@ -415,6 +495,12 @@ namespace QASMTrans
             Gate G(OP::RZZ, qubit0, qubit1, -1, 2, theta);
             gates->push_back(G);
         }
+        void RZX(ValType theta, IdxType qubit0, IdxType qubit1)
+        {
+            // RZX = exp(-i theta/2 Z⊗X)
+            Gate G(OP::RZX, qubit0, qubit1, -1, 2, theta);
+            gates->push_back(G);
+        }
         void SX(IdxType qubit)
         {
             // sqrt(X) gate, basis gate for IBMQ
@@ -431,6 +517,22 @@ namespace QASMTrans
                       [0 1]
             */
             Gate G(OP::ID, qubit);
+            gates->push_back(G);
+        }
+        void ISWAP(IdxType ctrl, IdxType qubit)
+        {
+            // iSWAP gate swaps amplitudes with phase i
+            /** ISWAP = [1 0 0 0]
+                         [0 0 i 0]
+                         [0 i 0 0]
+                         [0 0 0 1]
+            */
+            Gate G(OP::ISWAP, qubit, ctrl, -1, 2);
+            gates->push_back(G);
+        }
+        void ECR(IdxType ctrl, IdxType qubit)
+        {
+            Gate G(OP::ECR, qubit, ctrl, -1, 2);
             gates->push_back(G);
         }
         void SWAP(IdxType ctrl, IdxType qubit)

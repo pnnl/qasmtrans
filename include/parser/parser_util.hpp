@@ -43,13 +43,13 @@ const IdxType UN_DEF = -1;
 
 string DEFAULT_GATES[] = {
     "U", "U3", "U2", "U1", "X", "Y", "Z", "H",
-    "S", "SDG", "T", "TDG", "SX",
+    "S", "SDG", "T", "TDG", "SX", "SXDG",
     "RX", "RY", "RZ",
-    "CZ", "CX", "CY", "CH",
+    "CZ", "CX", "CY", "CH", "PRX",
     "CCX", "CRX", "CRY", "CRZ", "CU1", "CU3",
-    "RESET", "SWAP", "CSWAP",
+    "RESET", "SWAP", "ISWAP", "ECR", "CSWAP",
     "ID", "RI", "P", "CS", "CSDG", "CT", "CTDG", "CSX", "CP",
-    "RZZ", "RXX", "RYY", "RCCX"};
+    "RZZ", "RXX", "RYY", "RZX", "RCCX"};
 
 const string OPENQASM("OPENQASM");
 const string QREG("QREG");

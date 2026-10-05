@@ -1,172 +1,365 @@
-#include <memory>
-#include <string>
 #include <algorithm>
 #include <cctype>
+#include <exception>
 #include <iostream>
-#include <sstream>
+#include <string>
+#include <unordered_map>
+#include <unordered_set>
+#include <vector>
 
 #include "../include/QASMTransPrimitives.hpp"
-#include "../include/IR/chip.hpp"
-#include "../include/parser/parser_util.hpp"
-#include "../include/parser/qasm_parser.hpp"
-#include "../include/circuit_passes/transpiler.hpp"
+#include "../include/cli_pipeline.hpp"
+#include "../include/cli_support.hpp"
 
 using namespace QASMTrans;
+using namespace QASMTrans::cli;
 
-void print_help()
+namespace QASMTrans
 {
-    // print the help function for all the options
-    std::cout << "Usage: ./qasmtrans [options]" << std::endl;
-    std::cout << "Option            Description" << std::endl;
-    std::cout << "-i                Input qasm circuit file" << std::endl;
-    std::cout << "-c <backend>      Path to backend configuration json file" << std::endl;
-    std::cout << "-limited          Run the transpiler with limited physical qubits usage" << std::endl;
-    std::cout << "-limited          Limit qubit usage to circuit than device. "
-        << "It reduces qubit usage but may introduce extra routing cost or unable to route" << std::endl;
-    std::cout << "-backend_list     Print the available device backends" << std::endl;
-    std::cout << "-m <name>         Set the transpiler targeted device, default is ibmq" << std::endl;
-    std::cout << "-v <0/1/2>        Set the output level, default is 0" << std::endl;
-    std::cout << "-o <path>         Set the output file, "
-        << "default is data/output/transpiled_modename_filename.qasm" << std::endl;
-    std::cout << "-h                print the help function" << std::endl;
+    std::unordered_set<std::string> g_device_basis_gates;
+    std::unordered_map<std::string, std::string> g_merged_gate_aliases;
 }
+
+namespace
+{
+    void print_help()
+    {
+        std::cout << "Usage: ./qasmtrans [options]" << std::endl;
+        std::cout << "Option            Description" << std::endl;
+        std::cout << "-i <path>         Input QASM file (repeat -i for multiple circuits)" << std::endl;
+        std::cout << "-c <backend>      Path to backend configuration json file" << std::endl;
+        std::cout << "-limited          Restrict physical qubit usage to the circuit size; may add routing cost" << std::endl;
+        std::cout << "-backend_list     Print the available device backends" << std::endl;
+        std::cout << "-m <name>         Set the transpiler targeted device (ibmq, ionq, quantinuum, rigetti, quafu, iqm), default is ibmq" << std::endl;
+        std::cout << "-v <0/1/2>        Set the output level, default is 0" << std::endl;
+        std::cout << "-full_fidelity    Score Mapomatic candidates on the entire circuit instead of its critical path" << std::endl;
+        std::cout << "-cp_mode <product|hybrid>  Choose scoring strategy (default product)" << std::endl;
+        std::cout << "-mapomatic_limit <N>       Limit the number of candidate embeddings Mapomatic evaluates (default 1000)" << std::endl;
+        std::cout << "--enable_mapomatic        Run the calibration-aware Mapomatic pass" << std::endl;
+        std::cout << "--disable_mapomatic       Skip the calibration-aware Mapomatic pass (default)" << std::endl;
+        std::cout << "-o <path>         Set the output file, default is data/output/transpiled_modename_filename.qasm" << std::endl;
+        std::cout << "-p <path>         Pulse template json (optional; enables pulse dumping)" << std::endl;
+        std::cout << "--merge-allow-params     Include parameterised logical gates as merge candidates (default)" << std::endl;
+        std::cout << "--merge-disallow-params  Exclude parameterised logical gates from merge candidate analysis" << std::endl;
+        std::cout << "--optimize-1q            Enable simple single-qubit consolidation pass" << std::endl;
+        std::cout << "--identity-layout        Use identity logical-to-physical layout" << std::endl;
+        std::cout << "--routing-mode <default|exec-window>  Select routing heuristic (default: default)" << std::endl;
+        std::cout << "-h                print the help function" << std::endl;
+    }
+
+    void print_backend_list()
+    {
+        static const std::vector<std::string> backends = {
+            "ibmq_toronto (27 qubits)",
+            "ibmq_jakarta (7 qubits)",
+            "ibmq_guadalupe (16 qubits)",
+            "ibm_seattle (433 qubits)",
+            "ibm_cairo (27 qubits)",
+            "ibm_brisbane (127 qubits)",
+            "aspen_m3 (80 qubits)",
+            "h1_2 (12 qubits)",
+            "h1_1 (20 qubits)",
+            "dummy_ibmq12 (12 qubits)",
+            "dummy_ibmq14 (14 qubits)",
+            "dummy_ibmq15 (15 qubits)",
+            "dummy_ibmq16 (16 qubits)",
+            "dummy_ibmq30 (30 qubits)",
+        };
+
+        std::cout << "The available backends are:" << std::endl;
+        for (const auto &backend : backends)
+        {
+            std::cout << backend << std::endl;
+        }
+        std::cout << "You can manually add new machine in json file at data/device" << std::endl;
+    }
+
+    bool has_option(int argc, char **argv, const std::string &option)
+    {
+        for (int i = 1; i < argc; ++i)
+        {
+            if (argv[i] && option == argv[i])
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    std::string lower_ascii(std::string value)
+    {
+        std::transform(value.begin(), value.end(), value.begin(),
+                       [](unsigned char ch)
+                       { return static_cast<char>(std::tolower(ch)); });
+        return value;
+    }
+
+    const char *require_value(int argc, char **argv, int &index, const std::string &option, int &exit_code)
+    {
+        if (index + 1 >= argc)
+        {
+            std::cerr << "Error: " << option << " requires a value." << std::endl;
+            exit_code = 1;
+            return nullptr;
+        }
+        return argv[++index];
+    }
+
+    bool parse_cli(int argc, char **argv, CliConfig &config, int &exit_code)
+    {
+        if (argc == 1 || has_option(argc, argv, "-h"))
+        {
+            print_help();
+            exit_code = 0;
+            return false;
+        }
+
+        for (int argi = 1; argi < argc; ++argi)
+        {
+            std::string current = argv[argi];
+            if (current == "-backend_list")
+            {
+                print_backend_list();
+                exit_code = 0;
+                return false;
+            }
+            if (current == "-limited")
+            {
+                config.run_with_limit = true;
+                continue;
+            }
+            if (current == "-full_fidelity")
+            {
+                config.use_full_fidelity = true;
+                continue;
+            }
+            if (current == "--enable_mapomatic")
+            {
+                config.disable_mapomatic = false;
+                continue;
+            }
+            if (current == "--disable_mapomatic")
+            {
+                config.disable_mapomatic = true;
+                continue;
+            }
+            if (current == "--merge-disallow-params")
+            {
+                config.allow_parameterized_merge_candidates = false;
+                continue;
+            }
+            if (current == "--merge-allow-params")
+            {
+                config.allow_parameterized_merge_candidates = true;
+                continue;
+            }
+            if (current == "--optimize-1q")
+            {
+                config.enable_1q_opt = true;
+                continue;
+            }
+            if (current == "--identity-layout")
+            {
+                config.force_identity_layout = true;
+                continue;
+            }
+
+            auto next_value = [&]() -> const char *
+            {
+                return require_value(argc, argv, argi, current, exit_code);
+            };
+
+            if (current == "-i")
+            {
+                const char *value = next_value();
+                if (!value)
+                {
+                    return false;
+                }
+                config.input_files.emplace_back(value);
+                continue;
+            }
+            if (current == "-c")
+            {
+                const char *value = next_value();
+                if (!value)
+                {
+                    return false;
+                }
+                config.backendpath = value;
+                continue;
+            }
+            if (current == "-m")
+            {
+                const char *value = next_value();
+                if (!value)
+                {
+                    return false;
+                }
+                config.mode_name = value;
+                try
+                {
+                    config.mode = mode_from_string(config.mode_name);
+                }
+                catch (const std::exception &)
+                {
+                    std::cout << "Invalid mode name, please check" << std::endl;
+                    exit_code = 0;
+                    return false;
+                }
+                continue;
+            }
+            if (current == "-o")
+            {
+                const char *value = next_value();
+                if (!value)
+                {
+                    return false;
+                }
+                config.output_path = value;
+                continue;
+            }
+            if (current == "-p")
+            {
+                const char *value = next_value();
+                if (!value)
+                {
+                    return false;
+                }
+                config.pulse_template_path = value;
+                continue;
+            }
+            if (current == "-v")
+            {
+                const char *value = next_value();
+                if (!value)
+                {
+                    return false;
+                }
+                config.debug_level = IdxType(std::stoi(value));
+                continue;
+            }
+            if (current == "-cp_mode")
+            {
+                const char *value = next_value();
+                if (!value)
+                {
+                    return false;
+                }
+                std::string lowered = lower_ascii(value);
+                if (lowered == "product" || lowered == "log" || lowered == "multiplicative")
+                {
+                    config.cp_mode = CliCriticalPathMode::LogProduct;
+                }
+                else if (lowered == "hybrid")
+                {
+                    config.cp_mode = CliCriticalPathMode::Hybrid;
+                }
+                else
+                {
+                    std::cerr << "Error: unknown -cp_mode value '" << value
+                              << "'. Expected 'product' or 'hybrid'." << std::endl;
+                    exit_code = 1;
+                    return false;
+                }
+                continue;
+            }
+            if (current == "-mapomatic_limit")
+            {
+                const char *value = next_value();
+                if (!value)
+                {
+                    return false;
+                }
+                try
+                {
+                    long long parsed = std::stoll(value);
+                    if (parsed <= 0)
+                    {
+                        std::cerr << "Error: -mapomatic_limit must be greater than zero (got " << parsed << ")." << std::endl;
+                        exit_code = 1;
+                        return false;
+                    }
+                    config.mapomatic_limit = static_cast<std::size_t>(parsed);
+                }
+                catch (const std::exception &)
+                {
+                    std::cerr << "Error: failed to parse -mapomatic_limit argument '" << value << "'." << std::endl;
+                    exit_code = 1;
+                    return false;
+                }
+                continue;
+            }
+            if (current == "--routing-mode")
+            {
+                const char *value = next_value();
+                if (!value)
+                {
+                    return false;
+                }
+                std::string lowered = lower_ascii(value);
+                if (lowered == "default" || lowered == "sabre")
+                {
+                    config.routing_mode = CliRoutingMode::Sabre;
+                }
+                else if (lowered == "exec-window" || lowered == "exec_window")
+                {
+                    config.routing_mode = CliRoutingMode::ExecWindow;
+                }
+                else
+                {
+                    std::cerr << "Error: unknown --routing-mode value '" << value
+                              << "'. Expected 'default' or 'exec-window'." << std::endl;
+                    exit_code = 1;
+                    return false;
+                }
+                continue;
+            }
+        }
+
+        if (config.input_files.empty())
+        {
+            std::cerr << "Error: missing input QASM file(s) (-i)." << std::endl;
+            exit_code = 1;
+            return false;
+        }
+        if (config.backendpath.empty())
+        {
+            std::cerr << "Error: missing machine backend file via -c" << std::endl;
+            exit_code = 1;
+            return false;
+        }
+        exit_code = 0;
+        return true;
+    }
+} // namespace
 
 int main(int argc, char **argv)
 {
-    bool run_with_limit = false;
-    IdxType mode = 0;
-    std::string mode_name = "ibmq";
-    IdxType debug_level = 0;
-    std::string output_path = "../data/output/";
-    std::map<std::string, IdxType> machineQubits = {
-        {"ibmq_toronto", 27},
-        {"ibmq_jakarta", 7},
-        {"ibmq_guadalupe", 16},
-        {"ibm_seattle", 433},
-        {"ibm_cairo", 27},
-        {"ibm_brisbane", 127},
-        {"dummy_ibmq12", 12},
-        {"dummy_ibmq14", 14},
-        {"dummy_ibmq15", 15},
-        {"dummy_ibmq16", 16},
-        {"dummy_ibmq30", 30},
-        {"aspen_m3", 80},
-        {"h1_2", 12},
-        {"h1_1", 20}};
-    if (argc == 1)
+    CliConfig config;
+    int early_exit = 0;
+    if (!parse_cli(argc, argv, config, early_exit))
     {
-        print_help();
-        return 0;
+        return early_exit;
     }
-    else
+
+    try
     {
-        if (cmdOptionExists(argv, argv + argc, "-h"))
+        cpu_timer backend_metadata_timer;
+        backend_metadata_timer.start_timer();
+        ingest_backend_metadata(config.backendpath, g_device_basis_gates, g_merged_gate_aliases);
+        backend_metadata_timer.stop_timer();
+
+        ExecutionPipeline pipeline = select_execution_pipeline(config);
+        if (pipeline == ExecutionPipeline::BatchEnhanced)
         {
-            print_help();
-            return 0;
+            return run_batch_pipeline(config);
         }
-        //! need a -m for different machine mode basis
-        if (cmdOptionExists(argv, argv + argc, "-limited"))
-        {
-            run_with_limit = true;
-        }
-        if (cmdOptionExists(argv, argv + argc, "-v"))
-        {
-            debug_level = IdxType(std::stoi(getCmdOption(argv, argv + argc, "-v")));
-        }
-        if (cmdOptionExists(argv, argv + argc, "-o"))
-        {
-            output_path = std::string(getCmdOption(argv, argv + argc, "-o"));
-        }
-        if (cmdOptionExists(argv, argv + argc, "-backend_list"))
-        {
-            std::cout << "The available backends are:" << std::endl;
-            std::cout << "ibmq_toronto (27 qubits)" << std::endl;
-            std::cout << "ibmq_jakarta (7 qubits)" << std::endl;
-            std::cout << "ibmq_guadalupe (16 qubits)" << std::endl;
-            std::cout << "ibm_seattle (433 qubits)" << std::endl;
-            std::cout << "ibm_cairo (27 qubits)" << std::endl;
-            std::cout << "ibm_brisbane (127 qubits)" << std::endl;
-            std::cout << "aspen_m3 (80 qubits)" << std::endl;
-            std::cout << "h1_2 (12 qubits)" << std::endl;
-            std::cout << "h1_1 (20 qubits)" << std::endl;
-            std::cout << "dummy_ibmq12 (12 qubits)" << std::endl;
-            std::cout << "dummy_ibmq14 (14 qubits)" << std::endl;
-            std::cout << "dummy_ibmq15 (15 qubits)" << std::endl;
-            std::cout << "dummy_ibmq16 (16 qubits)" << std::endl;
-            std::cout << "dummy_ibmq30 (30 qubits)" << std::endl;
-            std::cout << "You can manually add new machine in json file at data/device" << std::endl;
-            return 0;
-        }
-        if (cmdOptionExists(argv, argv + argc, "-m"))
-        {
-            mode_name = std::string(getCmdOption(argv, argv + argc, "-m"));
-            if (mode_name == "ibmq" || mode_name == "IBMQ")
-            {
-                mode = 0;
-            }
-            else if (mode_name == "ionq" || mode_name == "IonQ")
-            {
-                mode = 1;
-            }
-            else if (mode_name == "Quantinuum" || mode_name == "quantinuum")
-            {
-                mode = 2;
-            }
-            else if (mode_name == "Rigetti" || mode_name == "rigetti")
-            {
-                mode = 3;
-            }
-            else if (mode_name == "Quafu" || mode_name == "quafu")
-            {
-                mode = 4;
-            }
-            else
-            {
-                std::cout << "Invalid mode name, please check" << std::endl;
-                return 0;
-            }
-        }
-        if (cmdOptionExists(argv, argv + argc, "-i"))
-        {
-            const char *filename = getCmdOption(argv, argv + argc, "-i");
-            if (!cmdOptionExists(argv, argv + argc, "-c"))
-            {
-                cerr << "Error: missing machine backend file via -c" << endl;
-                return 1;
-            }
-            string backendpath = string(getCmdOption(argv, argv + argc, "-c"));
-            //================= Parsing ==================
-            qasm_parser parser(filename);
-            IdxType n_qubits = parser.num_qubits();
-            shared_ptr<Circuit> circuit = make_shared<Circuit>(n_qubits);
-            parser.loadin_circuit(circuit);
-            shared_ptr<Chip> chip = constructChip(n_qubits, backendpath,
-                                                  run_with_limit, debug_level);
-            if (debug_level > 0)
-            {
-                cout << "======== QASMTrans ========" << endl;
-                cout << "Input circuit: " << filename << " (" << n_qubits << " qubits)" << endl;
-                cout << "Basis gate mode: " << mode_name << endl;
-                cout << "Backend (topology): " << backendpath
-                     << " (" << chip->chip_qubit_num << " physical qubits)" << endl;
-                cout << "Limit mode: " << (run_with_limit ? "True" : "False") << endl;
-            }
-            //================= Transpilation ==================
-            if (circuit->is_empty())
-            {
-                cerr << "Error: Circuit from " << filename << " is empty" << endl;
-                return 1;
-            }
-            transpiler(circuit, chip, parser.get_list_cregs(),
-                       debug_level, mode);
-            //================= Write out ==================
-            dumpQASM(circuit, filename, output_path, debug_level, mode);
-            cout << "Saving output qasm to: " << output_path << endl;
-            return 0;
-        }
+        return run_single_circuit_pipeline(config, pipeline, backend_metadata_timer.measure());
     }
-    std::cout << "Invalid Commend Line, Please Check" << std::endl;
-    print_help();
-    return 0;
+    catch (const std::exception &ex)
+    {
+        std::cerr << "Error: " << ex.what() << std::endl;
+        return 1;
+    }
 }

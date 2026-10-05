@@ -539,6 +539,8 @@ void qasm_parser::generate_circuit(shared_ptr<Circuit> circuit, qasm_gate gate)
         circuit->TDG(qubits[0]);
     else if (gate_name == "RX")
         circuit->RX(params[0], qubits[0]);
+    else if (gate_name == "PRX")
+        circuit->PRX(params[0], params[1], qubits[0]);
     else if (gate_name == "RY")
         circuit->RY(params[0], qubits[0]);
     else if (gate_name == "RZ")
@@ -569,6 +571,10 @@ void qasm_parser::generate_circuit(shared_ptr<Circuit> circuit, qasm_gate gate)
         circuit->RESET(qubits[0]);
     else if (gate_name == "SWAP")
         circuit->SWAP(qubits[0], qubits[1]);
+    else if (gate_name == "ISWAP")
+        circuit->ISWAP(qubits[0], qubits[1]);
+    else if (gate_name == "ECR")
+        circuit->ECR(qubits[0], qubits[1]);
     else if (gate_name == "SX")
         circuit->SX(qubits[0]);
     else if (gate_name == "RI")
@@ -599,6 +605,8 @@ void qasm_parser::generate_circuit(shared_ptr<Circuit> circuit, qasm_gate gate)
         circuit->RYY(params[0], qubits[0], qubits[1]);
     else if (gate_name == "RZZ")
         circuit->RZZ(params[0], qubits[0], qubits[1]);
+    else if (gate_name == "RZX")
+        circuit->RZX(params[0], qubits[0], qubits[1]);
     else if (gate_name == "RCCX")
         circuit->RCCX(qubits[0], qubits[1], qubits[2]);
     else

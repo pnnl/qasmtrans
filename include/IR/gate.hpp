@@ -1,9 +1,13 @@
 #pragma once
 
+#include <algorithm>
+#include <cctype>
+#include <cstring>
 #include <iostream>
+#include <set>
 #include <sstream>
 #include <string>
-#include <cstring>
+#include <utility>
 #include "../QASMTransPrimitives.hpp"
 
 namespace QASMTrans
@@ -72,6 +76,11 @@ namespace QASMTrans
          *      [-i*sin(a/2) cos(a/2)]
          ******************************************/
         RX,
+        /******************************************
+         * Phased rotation around X axis
+         * RZ(phi) RX(theta) RZ(-phi)
+         ******************************************/
+        PRX,
         /******************************************
          * Rotation around Y axis
          * RY = [cos(a/2) -sin(a/2)]
@@ -198,6 +207,14 @@ namespace QASMTrans
          ******************************************/
         ID,
         /******************************************
+         * iSWAP gate: swaps qubits with phase i
+         * iSWAP = [1, 0, 0, 0]
+         *         [0, 0, i, 0]
+         *         [0, i, 0, 0]
+         *         [0, 0, 0, 1]
+         ******************************************/
+        ISWAP,
+        /******************************************
          * SWAP gate: swap the position of two qubits
          * SWAP = [1,0,0,0]
          *        [0,0,1,0]
@@ -239,10 +256,12 @@ namespace QASMTrans
         RCCX,
         C3X,
         C3SQRTX,
+        ECR,
+        RZX,
     };
 
     // need more
-    static const std::set<OP> varGates = {RX, RY, RZ, RI, U, CU};
+    static const std::set<OP> varGates = {RX, PRX, RY, RZ, RI, U, CU};
 
     // Name of the gate for tracing purpose
     const char *const OP_NAMES[] = {
@@ -257,6 +276,7 @@ namespace QASMTrans
         "TDG",
         "RI",
         "RX",
+        "PRX",
         "RY",
         "RZ",
         "SX",
@@ -283,6 +303,7 @@ namespace QASMTrans
         "RZZ",
         // Other
         "ID",
+        "ISWAP",
         "SWAP",
         "M",
         "MA",
@@ -295,7 +316,9 @@ namespace QASMTrans
         "CCX",
         "RCCX",
         "C3X",
-        "C3SQRTX"};
+        "C3SQRTX",
+        "ECR",
+        "RZX"};
     /***********************************************
      * Gate Definition
      ***********************************************/
@@ -313,6 +336,9 @@ namespace QASMTrans
         ValType lam;
         ValType gamma = 0;
         IdxType repetition;
+        IdxType logical_gate_id = -1;
+        std::string logical_label;
+        std::string custom_op_name;
 
         Gate(enum OP _op_name,
              IdxType _qubit,
@@ -322,15 +348,19 @@ namespace QASMTrans
              ValType _theta = 0,
              ValType _phi = 0,
              ValType _lam = 0,
-             IdxType _repetition = 0) : op_name(_op_name),
-                                        qubit(_qubit),
-                                        ctrl(_ctrl),
-                                        extra(_extra),
-                                        n_qubits(_n_qubits),
-                                        theta(_theta),
-                                        phi(_phi),
-                                        lam(_lam),
-                                        repetition(_repetition) {}
+             IdxType _repetition = 0,
+             std::string _custom_op_name = std::string()) : op_name(_op_name),
+                                                            qubit(_qubit),
+                                                            ctrl(_ctrl),
+                                                            extra(_extra),
+                                                            n_qubits(_n_qubits),
+                                                            theta(_theta),
+                                                            phi(_phi),
+                                                            lam(_lam),
+                                                            repetition(_repetition),
+                                                            custom_op_name(std::move(_custom_op_name))
+        {
+        }
 
         Gate(const Gate &g) : op_name(g.op_name),
                               qubit(g.qubit),
@@ -340,14 +370,97 @@ namespace QASMTrans
                               theta(g.theta),
                               phi(g.phi),
                               lam(g.lam),
-                              repetition(g.repetition) {}
+                              repetition(g.repetition),
+                              logical_gate_id(g.logical_gate_id),
+                              logical_label(g.logical_label),
+                              custom_op_name(g.custom_op_name) {}
         ~Gate() {}
 
+        void set_logical_metadata(IdxType id, const std::string &label)
+        {
+            logical_gate_id = id;
+            logical_label = label;
+        }
+
+        void inherit_logical_metadata(const Gate &parent)
+        {
+            logical_gate_id = parent.logical_gate_id;
+            logical_label = parent.logical_label;
+        }
+
+        bool has_logical_metadata() const
+        {
+            return logical_gate_id >= 0 && !logical_label.empty();
+        }
+
+        bool has_custom_name() const
+        {
+            return !custom_op_name.empty();
+        }
+
+        void set_custom_name(std::string name)
+        {
+            custom_op_name = std::move(name);
+        }
+
+        const std::string &get_custom_name() const
+        {
+            return custom_op_name;
+        }
+
+        const char *base_name() const
+        {
+            return OP_NAMES[op_name];
+        }
+
+        std::string lower_base_name() const
+        {
+            std::string value = base_name();
+            std::transform(value.begin(), value.end(), value.begin(), [](unsigned char c)
+                           { return static_cast<char>(std::tolower(c)); });
+            return value;
+        }
+
+        std::string name() const
+        {
+            return has_custom_name() ? custom_op_name : std::string(OP_NAMES[op_name]);
+        }
+
+        std::string lower_name() const
+        {
+            std::string value = name();
+            std::transform(value.begin(), value.end(), value.begin(), [](unsigned char c)
+                           { return static_cast<char>(std::tolower(c)); });
+            return value;
+        }
+
+        bool name_equals(const std::string &other) const
+        {
+            if (has_custom_name())
+            {
+                return custom_op_name == other;
+            }
+            return other == OP_NAMES[op_name];
+        }
+
+        bool name_equals(const char *other) const
+        {
+            if (other == nullptr)
+            {
+                return false;
+            }
+            if (has_custom_name())
+            {
+                return custom_op_name == other;
+            }
+            return std::strcmp(OP_NAMES[op_name], other) == 0;
+        }
+
         // for dumping the gate
-        std::string gateToString()
+        std::string gateToString() const
         {
             std::stringstream ss;
-            ss << OP_NAMES[op_name];
+            ss << name();
             if (theta != 0.0 || phi != 0.0 || lam != 0.0)
             {
                 ss << "(";
