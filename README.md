@@ -161,6 +161,7 @@ QASMTrans includes two external source header files:
 - [json.hpp](https://github.com/nlohmann/json): a C++ json operation library.
 
 ## Developers:
+- Aaron Hoyt, Pacific Northwest National Laboratory
 - Fei Hua, Pacific Northwest National Laboratory 
 - Meng Wang, Pacific Northwest National Laboratory
 - Muqing Zheng, Pacific Northwest National Laboratory
